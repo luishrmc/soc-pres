@@ -13,3 +13,6 @@ Justificativa: preserva o tema `Darmstadt` e paleta institucional de `../../semi
 
 ## PRES-ADR-004 | 2026-11-25 | arquitetura | Modularizacao em 7 pastas de secao (`secao.tex` + 21 slides atomicos) com isolamento paralelo
 Justificativa: viabiliza orquestracao simultanea por secao (`--section`, `-jobname=<sec>` em `out/`, escopo de escrita disjunto em `boundary-guard.py`), ordena o nucleo tecnico em Zynq PS -> Zynq PL -> ESP32 auxiliar, move sintese FPGA para Secao 04 e proibe historico descartado na Secao 02.
+
+## PRES-ADR-005 | 2026-11-25 | figuras | Organizacao de `figuras/` em 7 subdiretorios por secao + `figuras/comuns/`
+Justificativa: espelha `secoes/<sec>/` permitindo adicao/edicao paralela de figuras sem conflito entre workers via `\graphicspath` isolado em cada `secao.tex` e `write_scope` por secao no `manifest.json`.

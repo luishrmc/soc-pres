@@ -13,7 +13,7 @@ Este repositório hospeda a apresentação técnica em LaTeX Beamer (16:9) do pr
 | `secoes/<sec>/` | 7 módulos: `01_abertura`, `02_arquitetura_sistema`, `03_zynq_software_ps`, `04_zynq_hardware_pl`, `05_ferramenta_auxiliar_esp32`, `06_metodologia_e_resultados_hil`, `99_conclusao` | Escrita isolada por `<sec>` (`slide-author-agent`) |
 | `secoes/<sec>/secao.tex` | Agregador `subfiles` da seção (permite compilação isolada em `out/<sec>.pdf`) | Escopo da seção `<sec>` |
 | `secoes/<sec>/<NN>_<slug>.tex` | Arquivo atômico por slide (`21` slides no total: `S01`–`S21`) | Escopo da seção `<sec>` |
-| `figuras/` | Diagramas portáveis (`cora7z_top.png`, `cora7z_soc_architecture.pdf`, SVGs) | Leitura / adição controlada |
+| `figuras/` | Subdiretórios espelhando as 7 seções (`figuras/<sec>/`) + `figuras/comuns/` (`README.md`) | Escrita isolada em `figuras/<sec>/`; `comuns/` serializado |
 | `bib/referencias.bib` | Base bibliográfica BibLaTeX/BibTeX (edição serializada) | Serializado na consolidação |
 | `utils/memory/` | Memória persistente: `INDEX.md`, `decisions.md`, `lessons.md`, `modules/`, `handoff/`, `episodes/` | `orchestrator-agent` / hooks |
 | `.agents/` | Manifesto, definições de agentes, skills e hooks determinísticos | Protegido (`manifest.json`) |
@@ -41,7 +41,7 @@ Este repositório hospeda a apresentação técnica em LaTeX Beamer (16:9) do pr
 ## 3. Orquestração Paralela Livre de Conflitos
 
 Cada seção pode ser conduzida por um `orchestrator-agent` dedicado em paralelo:
-- **Snapshot e fronteira isolados:** `--section <sec>` grava `out/boundary_snapshot_<sec>.json` e restringe escritas a `secoes/<sec>/**`, `utils/memory/modules/<sec>.md` e `utils/memory/handoff/<sec>.md`.
+- **Snapshot e fronteira isolados:** `--section <sec>` grava `out/boundary_snapshot_<sec>.json` e restringe escritas a `secoes/<sec>/**`, `figuras/<sec>/**`, `utils/memory/modules/<sec>.md` e `utils/memory/handoff/<sec>.md`.
 - **Compilação isolada:** `post-write-compile.sh <sec>` usa `-jobname=<sec>` em `out/`, gerando `out/<sec>.pdf` e `out/<sec>.log` sem colisão de `secao.pdf`/`secao.aux`.
 - **Arquivos compartilhados serializados:** `main.tex`, `bib/referencias.bib`, `utils/memory/INDEX.md`, `decisions.md` e `lessons.md` nunca são editados concorrentemente por workers de seção.
 

@@ -35,8 +35,8 @@ permissions:
 O `slide-author-agent` redige e diagrama os arquivos atomicos de slide `secoes/<secao>/<NN>_<slug>.tex` dentro da secao atribuida ao seu ciclo, mantendo `secoes/<secao>/secao.tex` como agregador `\subfiles`.
 
 Responsabilidades:
-- Editar exclusivamente os arquivos da secao designada (`secoes/<section_id>/**`, `utils/memory/modules/<section_id>.md`, `utils/memory/handoff/<section_id>.md`).
-- Manter cada arquivo atomico `<NN>_<slug>.tex` contendo apenas o(s) `\begin{frame}...\end{frame}` correspondente(s) (sem `\documentclass` nem `\begin{document}`), usando `\subfix{figuras/...}` em `\includegraphics`.
+- Editar exclusivamente os arquivos da secao designada (`secoes/<section_id>/**`, `figuras/<section_id>/**`, `utils/memory/modules/<section_id>.md`, `utils/memory/handoff/<section_id>.md`).
+- Manter cada arquivo atomico `<NN>_<slug>.tex` contendo apenas o(s) `\begin{frame}...\end{frame}` correspondente(s) (sem `\documentclass` nem `\begin{document}`), usando nomes simples em `\includegraphics{arquivo}` resolvidos pelo `\graphicspath` de `secao.tex`.
 - Respeitar as diretrizes especificas por secao:
   - `02_arquitetura_sistema`: **proibida** qualquer mencao a historico descartado (`RLE`, `LZ4`, `ChaCha20`, `AXI DMA`, `axis_accel_mux`).
   - `05_ferramenta_auxiliar_esp32`: manter peso estrito de 2 slides enfatizando papel auxiliar de bancada.

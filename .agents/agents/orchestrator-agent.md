@@ -40,8 +40,8 @@ O `orchestrator-agent` coordena o desenvolvimento paralelo por diretorio de seca
 ## 2. Protocolo Paralelo por Secao (`<section_id>`)
 1. **Pre-Task Audit Isolado:** executar `bash .agents/hooks/pre-task-audit.sh --section <section_id>` (grava snapshot exclusivo em `out/boundary_snapshot_<section_id>.json`).
 2. **Extracao (`content-retriever-agent`):** obter pacote factual da Camada Autoritativa de `../soc-proj` mapeado para `<section_id>`.
-3. **Autoria Atomica (`slide-author-agent`):** editar somente os arquivos atomicos `secoes/<section_id>/<NN>_<slug>.tex` e `utils/memory/handoff/<section_id>.md`.
-   - Em modo paralelo, arquivos compartilhados (`bib/referencias.bib`, `utils/memory/INDEX.md`, `decisions.md`, `lessons.md`) ficam bloqueados aos workers e sao consolidados de forma serializada ao final.
+3. **Autoria Atomica (`slide-author-agent`):** editar somente os arquivos atomicos `secoes/<section_id>/<NN>_<slug>.tex`, figuras da secao em `figuras/<section_id>/` e `utils/memory/handoff/<section_id>.md`.
+   - Em modo paralelo, arquivos compartilhados (`bib/referencias.bib`, `figuras/comuns/**`, `utils/memory/INDEX.md`, `decisions.md`, `lessons.md`) ficam bloqueados aos workers e sao consolidados de forma serializada ao final.
 4. **Inner Loop Deterministico:**
    - `python3 .agents/hooks/boundary-guard.py check --agent slide-author-agent --section <section_id>`
    - `bash .agents/hooks/slide-style-linter.sh secoes/<section_id>`

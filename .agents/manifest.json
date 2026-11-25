@@ -63,6 +63,8 @@
   ],
   "shared_serialized": [
     "bib/referencias.bib",
+    "figuras/comuns/**",
+    "figuras/README.md",
     "utils/memory/INDEX.md",
     "utils/memory/decisions.md",
     "utils/memory/lessons.md"
@@ -189,6 +191,7 @@
       ],
       "write_scope": [
         "secoes/01_abertura/**",
+        "figuras/01_abertura/**",
         "utils/memory/modules/01_abertura.md",
         "utils/memory/handoff/01_abertura.md"
       ],
@@ -206,6 +209,7 @@
       ],
       "write_scope": [
         "secoes/02_arquitetura_sistema/**",
+        "figuras/02_arquitetura_sistema/**",
         "utils/memory/modules/02_arquitetura_sistema.md",
         "utils/memory/handoff/02_arquitetura_sistema.md"
       ],
@@ -223,6 +227,7 @@
       ],
       "write_scope": [
         "secoes/03_zynq_software_ps/**",
+        "figuras/03_zynq_software_ps/**",
         "utils/memory/modules/03_zynq_software_ps.md",
         "utils/memory/handoff/03_zynq_software_ps.md"
       ],
@@ -241,6 +246,7 @@
       ],
       "write_scope": [
         "secoes/04_zynq_hardware_pl/**",
+        "figuras/04_zynq_hardware_pl/**",
         "utils/memory/modules/04_zynq_hardware_pl.md",
         "utils/memory/handoff/04_zynq_hardware_pl.md"
       ],
@@ -257,6 +263,7 @@
       ],
       "write_scope": [
         "secoes/05_ferramenta_auxiliar_esp32/**",
+        "figuras/05_ferramenta_auxiliar_esp32/**",
         "utils/memory/modules/05_ferramenta_auxiliar_esp32.md",
         "utils/memory/handoff/05_ferramenta_auxiliar_esp32.md"
       ],
@@ -274,6 +281,7 @@
       ],
       "write_scope": [
         "secoes/06_metodologia_e_resultados_hil/**",
+        "figuras/06_metodologia_e_resultados_hil/**",
         "utils/memory/modules/06_metodologia_e_resultados_hil.md",
         "utils/memory/handoff/06_metodologia_e_resultados_hil.md"
       ],
@@ -290,6 +298,7 @@
       ],
       "write_scope": [
         "secoes/99_conclusao/**",
+        "figuras/99_conclusao/**",
         "utils/memory/modules/99_conclusao.md",
         "utils/memory/handoff/99_conclusao.md"
       ],
