@@ -19,3 +19,6 @@ Justificativa: espelha `secoes/<sec>/` permitindo adicao/edicao paralela de figu
 
 ## PRES-ADR-006 | 2026-11-25 | build | Segregacao de `out/` em PDFs finais na raiz, `out/aux/`, `out/logs/` e `out/state/`
 Justificativa: utiliza `-emulate-aux-dir` no `latexmk` (tanto em `.vscode/settings.json` quanto em `post-write-compile.sh`) para que apenas os `.pdf` finais fiquem visiveis na raiz de `out/`, mantendo auxiliares, logs e snapshots organizados em subpastas.
+
+## PRES-ADR-007 | 2026-11-25 | governanca | Especializacao Vivado/Vitis, `diagram-svg-agent`, `technical-fidelity-critic-agent` e mapa local
+Justificativa: pre-indexa `../soc-proj` em `utils/memory/soc_proj_architecture_map.md`, adiciona geracao vetorial `.svg` + `.pdf` sob demanda (`pycairo`/`chrome`) e institui veto anti-desvio numerico, interpretativo e de escopo antes da redacao paralela.

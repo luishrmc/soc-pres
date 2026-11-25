@@ -1,12 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "project": "soc-pres-zynq7010",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "language": "pt-BR",
   "model_profile": "Gemini 4 Hydrogen",
-  "topology": "Supervisor-Worker Paralelo por Secao (Dual-Loop por Diretorio + Consolidacao Serializada)",
+  "topology": "Supervisor-Worker Paralelo por Secao (Dual-Loop + Geracao Vetorial SVG + Veto Anti-Desvio)",
   "source_of_truth": {
     "root": "../soc-proj",
+    "local_index": "utils/memory/soc_proj_architecture_map.md",
     "authoritative": [
       "../soc-proj/README.md",
       "../soc-proj/utils/plan/STATUS.md",
@@ -27,7 +28,13 @@
       "../soc-proj/docs/sw/AES_CTR_SW.md",
       "../soc-proj/docs/esp32/SPI_INJECTOR.md",
       "../soc-proj/docs/adr/0020-fixed-1024b-benchmark-payload.md",
-      "../soc-proj/cora7z/app/hw/utils/cora_z7_io.xdc"
+      "../soc-proj/cora7z/app/hw/utils/cora_z7_io.xdc",
+      "../soc-proj/cora7z/app/hw/scripts/configure_block_design.tcl",
+      "../soc-proj/cora7z/app/hw/scripts/build_bitstream.tcl"
+    ],
+    "excluded_heavy_pdfs": [
+      "../soc-proj/docs/cora7z/**",
+      "../soc-proj/docs/esp32/*.pdf"
     ],
     "historical_context_only": [
       "../soc-proj/utils/TEMA.md",
@@ -66,20 +73,21 @@
     "figuras/comuns/**",
     "figuras/README.md",
     "utils/memory/INDEX.md",
+    "utils/memory/soc_proj_architecture_map.md",
     "utils/memory/decisions.md",
     "utils/memory/lessons.md"
   ],
   "gates_by_stage": {
     "pre_task": ["pre-task-audit"],
     "inner_loop": ["boundary-guard", "slide-style-linter", "fact-sync-check", "post-write-compile"],
-    "outer_loop": ["design-critic-review", "human-gate"],
+    "outer_loop": ["technical-fidelity-critic", "design-critic-review", "human-gate"],
     "convergence": ["loop-convergence-guard", "memory-check"]
   },
   "agents": [
     {
       "name": "orchestrator-agent",
       "definition": ".agents/agents/orchestrator-agent.md",
-      "role": "Supervisor de secao ou consolidacao DAG, memoria persistente, convergencia e Gate Humano (nao edita .tex)",
+      "role": "Supervisor de secao ou consolidacao DAG, delegacao SVG, memoria persistente, convergencia e Gate Humano (nao edita .tex)",
       "model": "Gemini 4 Hydrogen",
       "thinking_level": "HIGH",
       "tools_allowed": ["run_command", "send_message", "view_file", "invoke_subagent", "write_to_file", "replace_file_content"],
@@ -90,6 +98,7 @@
         "main.tex",
         "config/**",
         "secoes/**",
+        "figuras/**",
         "bib/**",
         "out/**"
       ],
@@ -104,7 +113,7 @@
     {
       "name": "content-retriever-agent",
       "definition": ".agents/agents/content-retriever-agent.md",
-      "role": "Extrator factual somente leitura da Camada Autoritativa de ../soc-proj com citacao exata",
+      "role": "Extrator factual somente leitura da Camada Autoritativa de ../soc-proj via mapa local e skills Vivado/Vitis",
       "model": "Gemini 4 Hydrogen",
       "thinking_level": "LOW/MEDIUM",
       "tools_allowed": ["view_file", "run_command"],
@@ -113,12 +122,12 @@
         "utils/memory/**"
       ],
       "write": [],
-      "skills": ["soc-evidence-lookup"]
+      "skills": ["soc-evidence-lookup", "vivado-vitis-evidence"]
     },
     {
       "name": "slide-author-agent",
       "definition": ".agents/agents/slide-author-agent.md",
-      "role": "Redator e diagramador de arquivos atomicos de slide em secoes/<secao>/<slide>.tex",
+      "role": "Redator de arquivos atomicos de slide em secoes/<secao>/<slide>.tex",
       "model": "Gemini 4 Hydrogen",
       "thinking_level": "HIGH",
       "tools_allowed": ["view_file", "write_to_file", "replace_file_content"],
@@ -140,14 +149,53 @@
       "skills": ["beamer-soc-design", "memory-protocol"]
     },
     {
+      "name": "diagram-svg-agent",
+      "definition": ".agents/agents/diagram-svg-agent.md",
+      "role": "Especialista vetorial que gera diagramas .svg e .pdf em figuras/<secao>/ com identidade UFMG",
+      "model": "Gemini 4 Hydrogen",
+      "thinking_level": "MEDIUM/HIGH",
+      "tools_allowed": ["view_file", "write_to_file", "replace_file_content", "run_command"],
+      "read": [
+        "GEMINI.md",
+        "config/estilo_seminario.sty",
+        "config/00_config.tex",
+        "figuras/**",
+        "utils/memory/soc_proj_architecture_map.md",
+        "../soc-proj/docs/diagrams/generate_soc_diagram.py"
+      ],
+      "write": [
+        "figuras/**"
+      ],
+      "skills": ["svg-slide-diagram"]
+    },
+    {
+      "name": "technical-fidelity-critic-agent",
+      "definition": ".agents/agents/technical-fidelity-critic-agent.md",
+      "role": "Revisor adversarial somente leitura com veto anti-desvio numerico, interpretativo e de escopo",
+      "model": "Gemini 4 Hydrogen",
+      "thinking_level": "HIGH",
+      "tools_allowed": ["view_file"],
+      "read": [
+        "GEMINI.md",
+        "utils/memory/soc_proj_architecture_map.md",
+        "secoes/**",
+        "figuras/**",
+        "bib/referencias.bib",
+        "../soc-proj/**"
+      ],
+      "write": [],
+      "skills": ["soc-evidence-lookup", "vivado-vitis-evidence"]
+    },
+    {
       "name": "design-critic-agent",
       "definition": ".agents/agents/design-critic-agent.md",
-      "role": "Revisor adversarial somente leitura no Outer Loop por secao",
+      "role": "Revisor adversarial somente leitura de densidade visual, legibilidade e qualidade grafica Beamer",
       "model": "Gemini 4 Hydrogen",
       "thinking_level": "HIGH",
       "tools_allowed": ["view_file"],
       "read": [
         "secoes/**",
+        "figuras/**",
         "main.tex",
         "bib/referencias.bib",
         "config/**",
@@ -160,7 +208,7 @@
     {
       "name": "compiler-agent",
       "definition": ".agents/agents/compiler-agent.md",
-      "role": "Compilador deterministico LaTeX em out/ com -jobname isolado por secao",
+      "role": "Compilador deterministico LaTeX em out/ com -emulate-aux-dir e -jobname isolado por secao",
       "model": "Gemini 4 Hydrogen",
       "thinking_level": "LOW",
       "tools_allowed": ["run_command", "view_file"],
@@ -196,7 +244,7 @@
         "utils/memory/handoff/01_abertura.md"
       ],
       "title": "Abertura, motivacao, requisitos e roteiro na Cora Z7-10",
-      "sources": ["../soc-proj/README.md", "../soc-proj/utils/TEMA.md", "../soc-proj/utils/Projeto Final.pdf"]
+      "sources": ["utils/memory/soc_proj_architecture_map.md", "../soc-proj/README.md", "../soc-proj/utils/TEMA.md", "../soc-proj/utils/Projeto Final.pdf"]
     },
     {
       "step_id": "02_arquitetura_sistema",
@@ -214,7 +262,7 @@
         "utils/memory/handoff/02_arquitetura_sistema.md"
       ],
       "title": "Arquitetura final (LZSS + AES-128-CTR), topologia Zynq-7000 e BRAM Dual-Port",
-      "sources": ["../soc-proj/README.md", "../soc-proj/cora7z/app/hw/utils/cora_z7_io.xdc", "../soc-proj/utils/memory/decisions.md"]
+      "sources": ["utils/memory/soc_proj_architecture_map.md", "../soc-proj/README.md", "../soc-proj/cora7z/app/hw/utils/cora_z7_io.xdc", "../soc-proj/cora7z/app/hw/scripts/configure_block_design.tcl"]
     },
     {
       "step_id": "03_zynq_software_ps",
@@ -232,7 +280,7 @@
         "utils/memory/handoff/03_zynq_software_ps.md"
       ],
       "title": "Subsistema Zynq PS: firmware C11, PCFG_DONE, ARM PMU, SEC-01 e modelos SW",
-      "sources": ["../soc-proj/docs/sw/PIPELINE_MGR.md", "../soc-proj/docs/sw/AXI_SPI_RECEIVER.md", "../soc-proj/docs/sw/LZSS_SW.md", "../soc-proj/docs/sw/AES_CTR_SW.md"]
+      "sources": ["utils/memory/soc_proj_architecture_map.md", "../soc-proj/docs/sw/PIPELINE_MGR.md", "../soc-proj/docs/sw/AXI_SPI_RECEIVER.md", "../soc-proj/docs/sw/LZSS_SW.md", "../soc-proj/docs/sw/AES_CTR_SW.md"]
     },
     {
       "step_id": "04_zynq_hardware_pl",
@@ -251,7 +299,7 @@
         "utils/memory/handoff/04_zynq_hardware_pl.md"
       ],
       "title": "Subsistema Zynq PL: VHDL-2008, VUnit 12/12 e sintese XC7Z010",
-      "sources": ["../soc-proj/docs/hw/LZSS_ACCEL.md", "../soc-proj/docs/hw/AES_ACCEL.md", "../soc-proj/cora7z/test_results/BENCHMARK_RESULTS.md"]
+      "sources": ["utils/memory/soc_proj_architecture_map.md", "../soc-proj/docs/hw/LZSS_ACCEL.md", "../soc-proj/docs/hw/AES_ACCEL.md", "../soc-proj/cora7z/test_results/BENCHMARK_RESULTS.md"]
     },
     {
       "step_id": "05_ferramenta_auxiliar_esp32",
@@ -268,7 +316,7 @@
         "utils/memory/handoff/05_ferramenta_auxiliar_esp32.md"
       ],
       "title": "Ferramenta auxiliar ESP32: injetor SPI 1035 B e captura zero-drop",
-      "sources": ["../soc-proj/docs/esp32/SPI_INJECTOR.md", "../soc-proj/cora7z/test_results/BENCHMARK_RESULTS.md"]
+      "sources": ["utils/memory/soc_proj_architecture_map.md", "../soc-proj/docs/esp32/SPI_INJECTOR.md", "../soc-proj/cora7z/test_results/BENCHMARK_RESULTS.md"]
     },
     {
       "step_id": "06_metodologia_e_resultados_hil",
@@ -286,7 +334,7 @@
         "utils/memory/handoff/06_metodologia_e_resultados_hil.md"
       ],
       "title": "Metodologia ADR-020, resultados HIL N=20, Cenario 3 e Risco R9",
-      "sources": ["../soc-proj/utils/plan/Matriz_de_Testes_e_Métricas.csv", "../soc-proj/cora7z/test_results/BENCHMARK_RESULTS.md", "../soc-proj/utils/plan/STATUS.md"]
+      "sources": ["utils/memory/soc_proj_architecture_map.md", "../soc-proj/utils/plan/Matriz_de_Testes_e_Métricas.csv", "../soc-proj/cora7z/test_results/BENCHMARK_RESULTS.md", "../soc-proj/utils/plan/STATUS.md"]
     },
     {
       "step_id": "99_conclusao",
@@ -303,7 +351,7 @@
         "utils/memory/handoff/99_conclusao.md"
       ],
       "title": "Sintese comparativa, licoes aprendidas, trabalhos futuros e referencias",
-      "sources": ["../soc-proj/utils/plan/STATUS.md", "../soc-proj/utils/memory/lessons.md", "bib/referencias.bib"]
+      "sources": ["utils/memory/soc_proj_architecture_map.md", "../soc-proj/utils/plan/STATUS.md", "../soc-proj/utils/memory/lessons.md", "bib/referencias.bib"]
     }
   ]
 }

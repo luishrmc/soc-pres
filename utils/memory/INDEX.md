@@ -1,11 +1,12 @@
 # Memory Index
 
-Leia este arquivo e `GEMINI.md` antes de iniciar qualquer secao. Limite: 40 linhas.
+Leia `GEMINI.md`, este indice e `utils/memory/soc_proj_architecture_map.md` antes de abrir `../soc-proj`. Limite: 40 linhas.
 
 ## Estrutura
 
 | Caminho | Finalidade | Responsavel |
 |---|---|---|
+| `soc_proj_architecture_map.md` | Mapa canonico pre-indexado de `../soc-proj` | `orchestrator-agent` |
 | `decisions.md` | Registro append-only de decisoes (`PRES-ADR-NNN`) | `orchestrator-agent` |
 | `lessons.md` | Erros recorrentes de LaTeX/hooks e solucoes (<= 80 linhas) | `orchestrator-agent` |
 | `modules/<sec>.md` | Digest por secao Beamer (<= 60 linhas) | `slide-author-agent` |
@@ -21,7 +22,3 @@ Leia este arquivo e `GEMINI.md` antes de iniciar qualquer secao. Limite: 40 linh
 - `05_ferramenta_auxiliar_esp32`: `secao.tex` + `01_injetor_spi..02_sincronismo_hil_zerodrop.tex` (S15-S16)
 - `06_metodologia_e_resultados_hil`: `secao.tex` + `01_fidelidade..03_analise_causal_gargalos.tex` (S17-S19)
 - `99_conclusao`: `secao.tex` + `01_sintese_licoes_futuro..02_referencias.tex` (S20-S21)
-
-## Handoffs Ativos
-
-Arquitetura refatorada (aguardando atualizacao de `main.tex` para build global).
