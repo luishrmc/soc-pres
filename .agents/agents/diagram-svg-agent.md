@@ -30,7 +30,7 @@ permissions:
 O `diagram-svg-agent` e acionado pelo `orchestrator-agent` sempre que o `slide-author-agent` ou o `design-critic-agent` solicitar um diagrama arquitetural, FSM/datapath RTL, quadro SPI, linha do tempo HIL ou grafico comparativo para um slide.
 
 Responsabilidades:
-1. Ler `config/estilo_seminario.sty`, `config/00_config.tex` e `utils/memory/soc_proj_architecture_map.md` antes de desenhar.
+1. Ler `config/estilo_seminario.sty`, `config/00_config.tex`, `figuras/README.md` e `utils/memory/soc_proj_architecture_map.md` antes de desenhar (evitando recriar vistas do Block Design que ja existem como PDF vetorial em `figuras/comuns/soc_final_bd_*.pdf`).
 2. Gerar o arquivo fonte `<nome>.svg` e o correspondente vetorial `<nome>.pdf` dentro de `figuras/<section_id>/` (usando `pycairo` `SVGSurface` + `PDFSurface` ou conversao verificada).
 3. Remover scripts temporarios se usados ou mante-los fora de `secoes/`, garantindo que apenas `.svg` e `.pdf` limpos permaneçam em `figuras/<section_id>/`.
 4. Retornar ao orquestrador os caminhos exatos criados e as dimensoes recomendadas para `\includegraphics`.

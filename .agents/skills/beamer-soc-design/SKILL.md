@@ -11,7 +11,7 @@ Guia de redacao modular por slide atomico em LaTeX Beamer 16:9 para o projeto So
 
 - Cada pasta `secoes/<secao>/` possui um agregador `secao.tex` (`\documentclass[../../main.tex]{subfiles}`) que chama `\iniciarSecao` e inclui os slides via `\input{\subfix{secoes/<secao>/<NN>_<slug>}}`.
 - Cada arquivo atomico `<NN>_<slug>.tex` contem apenas o(s) `\begin{frame}...\end{frame}` correspondente(s).
-- Imagens de cada secao residem em `figuras/<secao>/` (e compartilhadas em `figuras/comuns/`), sendo resolvidas pelo `\graphicspath` de `secao.tex` com `\includegraphics{arquivo}`.
+- Imagens de cada secao residem em `figuras/<secao>/` e ativos compartilhados (como as 9 vistas vetoriais do Block Design Vivado `soc_final_bd_*.pdf` listadas em `figuras/README.md`) residem em `figuras/comuns/`, sendo todos resolvidos pelo `\graphicspath` de `secao.tex` com `\includegraphics{arquivo}`.
 - Todo frame tecnico deve incluir `\fonte{...}` no rodape; frames com `vhdlcode`/`ccode`/`scriptcode` exigem `[fragile]`.
 
 ## Regras Especificas de Secao

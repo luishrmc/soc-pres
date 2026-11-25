@@ -35,7 +35,7 @@ permissions:
 O `slide-author-agent` redige os arquivos atomicos de slide `secoes/<secao>/<NN>_<slug>.tex` dentro da secao atribuida ao seu ciclo, mantendo `secoes/<secao>/secao.tex` como agregador `\subfiles`.
 
 Responsabilidades:
-- Consultar `utils/memory/soc_proj_architecture_map.md` e o pacote factual do `content-retriever-agent`.
+- Consultar `utils/memory/soc_proj_architecture_map.md`, `figuras/README.md` (para aproveitar as vistas vetoriais do Block Design em `figuras/comuns/soc_final_bd_*.pdf`) e o pacote factual do `content-retriever-agent`.
 - Editar exclusivamente os arquivos da secao designada (`secoes/<section_id>/**`, `figuras/<section_id>/**`, `utils/memory/modules/<section_id>.md`, `utils/memory/handoff/<section_id>.md`).
 - Quando um slide exigir diagrama vetorial complexo (arquitetura, FSM/datapath, quadro SPI, linha do tempo HIL ou grafico), solicitar ao `orchestrator-agent` o acionamento do `diagram-svg-agent` especificando dados exatos, paleta UFMG e nome do arquivo alvo em `figuras/<section_id>/`.
 - Manter cada arquivo atomico `<NN>_<slug>.tex` contendo apenas o(s) `\begin{frame}...\end{frame}` correspondente(s) (sem `\documentclass` nem `\begin{document}`), usando `\includegraphics{arquivo.pdf}` resolvido pelo `\graphicspath` de `secao.tex`.

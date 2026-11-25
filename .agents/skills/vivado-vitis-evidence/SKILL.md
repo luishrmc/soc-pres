@@ -25,6 +25,8 @@ Consultar `utils/memory/soc_proj_architecture_map.md` antes de abrir qualquer fo
 - **`../soc-proj/cora7z/test_results/BENCHMARK_RESULTS.md` (§3.4 & §5):**
   - Sistema completo (`XC7Z010`): `8.810` LUTs (`50,06%`), `12.048` FFs (`34,23%`), `9` BRAMs (`15,00%`), `0` DSPs, `WNS = +0,551 ns` @ `100 MHz`, `WHS = +0,008 ns`, `0/33.838` falhas.
   - OOC por IP: `aes_accel_0` (`2.764` LUTs, `2.274` FFs), `lzss_accel_0` (`667` LUTs, `457` FFs), `axi_quad_spi_0` (`558` LUTs, `857` FFs, `1` BRAM), `bmg_*` (`40` LUTs, `48` FFs, `8` BRAMs).
+- **`figuras/comuns/soc_final_bd_*.pdf` (Vistas Reais do Block Design Vivado):**
+  - Exportacoes vetoriais autenticas de `soc_final_bd_1` disponiveis para inclusao direta nos slides (ver `figuras/README.md`): `addressing_view` (enderecos AXI), `clock_and_reset_view` (dominios `50/100 MHz` e resets), `interface_view` (portas BRAM/AXI/SPI), `color_coded`, `grouping_and_no_loops`, `no_loops`, `reduce_jogs` e `default_view`/`soc_final_bd_1`.
 
 ## 3. Fontes Vitis / Firmware Bare-Metal C11 (PS)
 

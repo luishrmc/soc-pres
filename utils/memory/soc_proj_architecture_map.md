@@ -76,3 +76,4 @@ Base de conhecimento pre-indexada para consulta primaria dos agentes de `soc-pre
 | Ferramenta auxiliar ESP32, carga ADR-020 e captura zero-drop | `docs/esp32/SPI_INJECTOR.md`, `cora7z/app/sw/src/comms/spi_frame.h`, `cora7z/test_results/{TEST_PLAN,BENCHMARK_RESULTS}.md` (§2.2, §2.4) |
 | Resultados HIL `N=20`, Cenario 3 e analise causal Risco R9 | `utils/plan/{Matriz_de_Testes_e_Métricas.csv,STATUS.md,Riscos_e_Bloqueios.csv}`, `cora7z/test_results/{BENCHMARK_RESULTS.md,benchmark_matrix_consolidated.csv}` |
 | Licoes aprendidas e armadilhas de toolchain | `utils/memory/lessons.md`, `BENCHMARK_RESULTS.md` (§4) |
+| Vistas vetoriais reais do Block Design Vivado (`soc_final_bd_1`) | `figuras/comuns/soc_final_bd_{default_view,color_coded,grouping_and_no_loops,interface_view,clock_and_reset_view,addressing_view,no_loops,reduce_jogs}.pdf` e `figuras/comuns/soc_final_bd_1.pdf` (ler `figuras/README.md`) |
