@@ -55,8 +55,10 @@
     "max_bullets_per_itemize": 6,
     "handoff_max_lines": 50,
     "digest_max_lines": 60,
+    "section_log_max_lines": 80,
     "index_max_lines": 40,
     "lessons_max_lines": 80,
+    "feedback_max_lines": 120,
     "rollback_action": "git checkout HEAD -- {target_file}"
   },
   "protected": [
@@ -75,12 +77,14 @@
     "utils/memory/INDEX.md",
     "utils/memory/soc_proj_architecture_map.md",
     "utils/memory/decisions.md",
-    "utils/memory/lessons.md"
+    "utils/memory/lessons.md",
+    "utils/memory/user_feedback_log.md"
   ],
   "gates_by_stage": {
-    "pre_task": ["pre-task-audit"],
+    "pre_flight": ["pre-task-audit", "pre-flight-memory-gate"],
     "inner_loop": ["boundary-guard", "slide-style-linter", "fact-sync-check", "post-write-compile"],
     "outer_loop": ["technical-fidelity-critic", "design-critic-review", "human-gate"],
+    "post_section": ["post-section-retro-gate", "memory-check"],
     "convergence": ["loop-convergence-guard", "memory-check"]
   },
   "agents": [
@@ -106,6 +110,8 @@
         "utils/memory/INDEX.md",
         "utils/memory/decisions.md",
         "utils/memory/lessons.md",
+        "utils/memory/user_feedback_log.md",
+        "utils/memory/sections/*",
         "utils/memory/handoff/*"
       ],
       "skills": ["memory-protocol", "git-safety-guard"]
@@ -240,6 +246,7 @@
       "write_scope": [
         "secoes/01_abertura/**",
         "figuras/01_abertura/**",
+        "utils/memory/sections/01_abertura.md",
         "utils/memory/modules/01_abertura.md",
         "utils/memory/handoff/01_abertura.md"
       ],
@@ -258,6 +265,7 @@
       "write_scope": [
         "secoes/02_arquitetura_sistema/**",
         "figuras/02_arquitetura_sistema/**",
+        "utils/memory/sections/02_arquitetura_sistema.md",
         "utils/memory/modules/02_arquitetura_sistema.md",
         "utils/memory/handoff/02_arquitetura_sistema.md"
       ],
@@ -276,6 +284,7 @@
       "write_scope": [
         "secoes/03_zynq_software_ps/**",
         "figuras/03_zynq_software_ps/**",
+        "utils/memory/sections/03_zynq_software_ps.md",
         "utils/memory/modules/03_zynq_software_ps.md",
         "utils/memory/handoff/03_zynq_software_ps.md"
       ],
@@ -295,6 +304,7 @@
       "write_scope": [
         "secoes/04_zynq_hardware_pl/**",
         "figuras/04_zynq_hardware_pl/**",
+        "utils/memory/sections/04_zynq_hardware_pl.md",
         "utils/memory/modules/04_zynq_hardware_pl.md",
         "utils/memory/handoff/04_zynq_hardware_pl.md"
       ],
@@ -312,6 +322,7 @@
       "write_scope": [
         "secoes/05_ferramenta_auxiliar_esp32/**",
         "figuras/05_ferramenta_auxiliar_esp32/**",
+        "utils/memory/sections/05_ferramenta_auxiliar_esp32.md",
         "utils/memory/modules/05_ferramenta_auxiliar_esp32.md",
         "utils/memory/handoff/05_ferramenta_auxiliar_esp32.md"
       ],
@@ -330,6 +341,7 @@
       "write_scope": [
         "secoes/06_metodologia_e_resultados_hil/**",
         "figuras/06_metodologia_e_resultados_hil/**",
+        "utils/memory/sections/06_metodologia_e_resultados_hil.md",
         "utils/memory/modules/06_metodologia_e_resultados_hil.md",
         "utils/memory/handoff/06_metodologia_e_resultados_hil.md"
       ],
@@ -347,6 +359,7 @@
       "write_scope": [
         "secoes/99_conclusao/**",
         "figuras/99_conclusao/**",
+        "utils/memory/sections/99_conclusao.md",
         "utils/memory/modules/99_conclusao.md",
         "utils/memory/handoff/99_conclusao.md"
       ],

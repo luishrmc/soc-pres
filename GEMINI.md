@@ -1,6 +1,6 @@
 # Diretrizes do Sistema: Apresentação SoC Zynq-7010 (`soc-pres`)
 
-Este repositório hospeda a apresentação técnica em LaTeX Beamer (16:9) do projeto final de Sistemas em Chip (SoC) desenvolvido em `../soc-proj`, estruturada em **7 pastas de seção** com **arquivos atômicos por slide** para permitir orquestração paralela sem conflitos de escrita.
+Este repositório hospeda a apresentação técnica em LaTeX Beamer (16:9) do projeto final de Sistemas em Chip (SoC) desenvolvido em `../soc-proj`, estruturada em **7 pastas de seção** com **arquivos atômicos por slide** e **aprendizado incremental acumulativo** entre seções.
 
 ---
 
@@ -13,19 +13,19 @@ Este repositório hospeda a apresentação técnica em LaTeX Beamer (16:9) do pr
 | `secoes/<sec>/` | 7 módulos: `01_abertura`, `02_arquitetura_sistema`, `03_zynq_software_ps`, `04_zynq_hardware_pl`, `05_ferramenta_auxiliar_esp32`, `06_metodologia_e_resultados_hil`, `99_conclusao` | Escrita isolada por `<sec>` (`slide-author-agent`) |
 | `secoes/<sec>/secao.tex` | Agregador `subfiles` da seção (compilação isolada em `out/<sec>.pdf`) | Escopo da seção `<sec>` |
 | `secoes/<sec>/<NN>_<slug>.tex` | Arquivo atômico por slide (`21` slides no total: `S01`–`S21`) | Escopo da seção `<sec>` |
-| `figuras/` | Subdiretórios espelhando as 7 seções (`figuras/<sec>/`) + `figuras/comuns/` (`README.md`) | Escrita isolada em `figuras/<sec>/` (`slide-author` / `diagram-svg`) |
+| `figuras/` | Subdiretórios espelhando as 7 seções (`figuras/<sec>/`) + `figuras/comuns/` (`soc_final_bd_*.pdf`, `README.md`) | Escrita isolada em `figuras/<sec>/` (`diagram-svg` / `slide-author`) |
 | `bib/referencias.bib` | Base bibliográfica BibLaTeX/BibTeX (edição serializada) | Serializado na consolidação |
-| `utils/memory/` | `INDEX.md`, `soc_proj_architecture_map.md`, `decisions.md`, `lessons.md`, `modules/`, `handoff/`, `episodes/` | `orchestrator-agent` / hooks |
-| `.agents/` | Manifesto, definições de agentes, skills e hooks determinísticos | Protegido (`manifest.json`) |
+| `utils/memory/` | `INDEX.md`, `soc_proj_architecture_map.md`, `user_feedback_log.md`, `lessons.md`, `sections/*.md`, `decisions.md`, `modules/`, `handoff/`, `episodes/` | `orchestrator-agent` / hooks |
+| `.agents/` | Manifesto (`v3.0.0`), agentes, skills e hooks determinísticos | Protegido (`manifest.json`) |
 | `out/` | PDFs finais na raiz (`main.pdf`, `<sec>.pdf`), auxiliares em `out/aux/`, logs em `out/logs/` e estados em `out/state/` | `compiler-agent` |
 
 ---
 
 ## 2. Protocolo de Leitura e Fonte da Verdade (`../soc-proj`)
 
-1. **Entrada Primária Obrigatória:** antes de abrir qualquer arquivo em `../soc-proj`, todo agente deve consultar `utils/memory/soc_proj_architecture_map.md` e `utils/memory/INDEX.md`.
+1. **Entrada Primária Obrigatória (`PRE-FLIGHT MEMORY GATE`):** antes de abrir qualquer arquivo em `../soc-proj` ou editar slides, ler `utils/memory/soc_proj_architecture_map.md`, `utils/memory/INDEX.md`, `utils/memory/lessons.md`, `utils/memory/user_feedback_log.md` e os logs `utils/memory/sections/*.md` das seções já concluídas.
 2. **Hierarquia de Decisão:**
-   - Instrução explícita do usuário;
+   - Instrução explícita do usuário e regras registradas em `user_feedback_log.md`;
    - Camada Autoritativa de `../soc-proj` (`README.md`, `STATUS.md`, `Matriz_de_Testes_e_Métricas.csv`, `BENCHMARK_RESULTS.md`, `TEST_PLAN.md`, ADRs 012–020, `cora_z7_io.xdc`, fontes RTL/C/Tcl);
    - Invariantes de estilo Beamer e cortes temáticos deste `GEMINI.md`.
 3. **Filtro de Contexto:** nunca ler datasheets externos pesados em `../soc-proj/docs/cora7z/` (`UG585.pdf`, `ds187-*.pdf`, manuais Digilent) nem `../soc-proj/docs/esp32/*.pdf`.
@@ -36,17 +36,21 @@ Este repositório hospeda a apresentação técnica em LaTeX Beamer (16:9) do pr
 
 ---
 
-## 3. Orquestração Paralela e Loop Iterativo por Seção
+## 3. Orquestração Incremental e Loop em 3 Gates por Seção
 
-Cada seção pode ser conduzida por um `orchestrator-agent` dedicado em paralelo:
-- **Snapshot e fronteira isolados:** `--section <sec>` grava `out/state/boundary_snapshot_<sec>.json` e restringe escritas a `secoes/<sec>/**`, `figuras/<sec>/**`, `utils/memory/modules/<sec>.md` e `utils/memory/handoff/<sec>.md`.
-- **Fluxo do Loop por Seção:**
-  1. `pre-task-audit.sh --section <sec>`
-  2. `content-retriever-agent` (skills `soc-evidence-lookup` + `vivado-vitis-evidence`)
-  3. `slide-author-agent` $\leftrightarrow$ `diagram-svg-agent` (skill `svg-slide-diagram`, gerando `.svg` + `.pdf` vetorial em `figuras/<sec>/`)
-  4. Inner Loop determinístico: `boundary-guard.py`, `slide-style-linter.sh`, `fact-sync-check.py`, `post-write-compile.sh <sec>` (`compiler-agent`)
-  5. Outer Loop adversarial (`read-only`): `technical-fidelity-critic-agent` (poder de veto anti-desvio) + `design-critic-agent` $\rightarrow$ **Gate Humano**
-- **Arquivos compartilhados serializados:** `main.tex`, `bib/referencias.bib`, `figuras/comuns/**`, `utils/memory/INDEX.md`, `soc_proj_architecture_map.md`, `decisions.md` e `lessons.md`.
+Cada seção executa obrigatoriamente os 3 gates abaixo (com isolamento `--section <sec>`):
+
+1. **`PRE-FLIGHT MEMORY GATE`:**
+   - `pre-task-audit.sh --section <sec>` (snapshot em `out/state/boundary_snapshot_<sec>.json`);
+   - Leitura obrigatória de `soc_proj_architecture_map.md`, `lessons.md`, `user_feedback_log.md` e `sections/*.md` concluídos.
+2. **`MULTI-AGENT CONVERGENCE LOOP`:**
+   - `content-retriever-agent` (`soc-evidence-lookup` + `vivado-vitis-evidence`) $\rightarrow$ `slide-author-agent` $\leftrightarrow$ `diagram-svg-agent` (`svg-slide-diagram`, `.svg` + `.pdf` em `figuras/<sec>/`);
+   - Inner Loop determinístico: `boundary-guard.py`, `slide-style-linter.sh`, `fact-sync-check.py`, `post-write-compile.sh <sec>` (`compiler-agent`) até **0 erros**, **0 `Overfull \hbox/\vbox`** em `out/aux/<sec>.log`;
+   - Outer Loop adversarial (`read-only`): `technical-fidelity-critic-agent` (poder de veto anti-desvio) + `design-critic-agent` até aprovação unânime.
+3. **`POST-SECTION RETRO & FEEDBACK GATE`:**
+   - Atualizar `utils/memory/sections/<sec>.md`, consolidar novas lições em `utils/memory/lessons.md`, registrar correções/preferências em `utils/memory/user_feedback_log.md`, validar com `python3 .agents/hooks/memory-check.py` e pausar no **Gate Humano**.
+
+- **Arquivos compartilhados serializados:** `main.tex`, `bib/referencias.bib`, `figuras/comuns/**`, `utils/memory/INDEX.md`, `soc_proj_architecture_map.md`, `user_feedback_log.md`, `decisions.md` e `lessons.md`.
 
 ---
 
@@ -54,7 +58,7 @@ Cada seção pode ser conduzida por um `orchestrator-agent` dedicado em paralelo
 
 | Agente | Thinking Level | Papel | Escrita Autorizada |
 |---|---|---|---|
-| `orchestrator-agent` | `HIGH` | Coordena seção/DAG, memória, convergência (`N <= 5`) e Gate Humano | `utils/memory/` (nunca edita `.tex`) |
+| `orchestrator-agent` | `HIGH` | Coordena os 3 gates, memória acumulativa, convergência (`N <= 5`) e Gate Humano | `utils/memory/` (nunca edita `.tex`) |
 | `content-retriever-agent` | `LOW/MEDIUM` | Extrai evidências de `../soc-proj` via `soc_proj_architecture_map.md` e skills Vivado/Vitis | Nenhuma (`read-only`) |
 | `slide-author-agent` | `HIGH` | Redige slides atômicos em `secoes/<sec>/<NN>_<slug>.tex` | `secoes/<sec>/**`, `figuras/<sec>/**`, `modules/<sec>.md`, `handoff/<sec>.md` |
 | `diagram-svg-agent` | `MEDIUM/HIGH` | Gera diagramas `.svg` + conversão vetorial `.pdf` com paleta UFMG | `figuras/<sec>/**` |
