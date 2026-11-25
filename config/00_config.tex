@@ -1,0 +1,56 @@
+% ============================================================================
+% 00_config.tex -- configuracao global da apresentacao do projeto final de SoC
+% Carregado por main.tex e, via subfiles, por cada secao compilada isolada.
+% ============================================================================
+
+% --- Filtragem de avisos benignos do console/IDE ----------------------------
+\usepackage{silence}
+\WarningFilter{latex}{You have requested package}
+\WarningFilter{latexfont}{Font shape `T1/lmss/m/sc'}
+\WarningFilter{biblatex}{Using fall-back bibtex backend}
+
+% --- Estilo visual (aparencia; nada de conteudo) ----------------------------
+\makeatletter
+\edef\seminario@cfgdir{\subfix{config/}}
+\edef\input@path{{\seminario@cfgdir}}
+\usepackage{estilo_seminario}
+\makeatother
+
+% --- Bibliografia -----------------------------------------------------------
+% Compilacao GLOBAL: biblatex com backend=bibtex.
+% Compilacao INDIVIDUAL (subfile): fallback leve para evitar dependencia de aux.
+\ifSubfilesClassLoaded{%
+  \newcommand{\autocite}[2][]{{\footnotesize[#2]}}
+  \newcommand{\textcite}[2][]{#2}
+  \newcommand{\fullcite}[1]{[#1]}
+  \newcommand{\printbibliography}[1][]{\textit{(refer\^encias dispon\'iveis na compila\c{c}\~ao global)}}
+}{%
+  \usepackage[backend=bibtex,style=ieee,sorting=none]{biblatex}
+  \addbibresource{bib/referencias.bib}
+}
+
+% --- Caminhos de Imagens do Modelo Institucional ----------------------------
+\DefinirCaminhoLogo{logo}
+\DefinirCaminhoCapa{capa}
+
+% --- Metadados da Apresentacao (Modelo UFMG) --------------------------------
+\titulo{Acelera\c{c}\~ao H\'ibrida PS/PL em SoC Zynq-7010}
+\subtitulo{Pipeline Compress-then-Encrypt (LZSS + AES-128-CTR) na Cora Z7-10}
+\curso{T\'opicos em Engenharia de Computa\c{c}\~ao (Sistemas em Sil\'icio / SoC)}
+\autor{Luis Henrique Ribeiro Maciel}
+\local{Belo Horizonte}
+\dia{25}
+\mes{Novembro}
+\ano{2026}
+
+% Metadados do Beamer
+\title[SoC Zynq-7010: LZSS + AES-CTR]{Acelera\c{c}\~ao H\'ibrida PS/PL em SoC Zynq-7010}
+\subtitle{Pipeline Compress-then-Encrypt (LZSS + AES-128-CTR) na Digilent Cora Z7-10}
+\author[L. H. R. Maciel]{Luis Henrique Ribeiro Maciel}
+\institute[UFMG]{Universidade Federal de Minas Gerais \textendash{} Escola de Engenharia (DELT)}
+\date{Novembro de 2026}
+
+\hypersetup{
+  pdftitle={Aceleracao Hibrida PS/PL em SoC Zynq-7010: LZSS + AES-128-CTR},
+  pdfauthor={Luis Henrique Ribeiro Maciel - UFMG}
+}

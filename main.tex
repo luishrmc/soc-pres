@@ -1,0 +1,21 @@
+% ============================================================================
+% main.tex -- documento raiz da apresentacao do projeto final de SoC
+%
+% Compilacao global : compile ESTE arquivo (gera out/main.pdf com BibLaTeX).
+% Compilacao modular: compile secoes/<secao>.tex (subfiles).
+% Saida isolada em  : out/ (latexmk -cd -outdir=out -auxdir=out).
+% ============================================================================
+\documentclass[aspectratio=169,10pt]{beamer}
+
+\usepackage{subfiles}
+\input{\subfix{config/00_config}}
+
+\begin{document}
+
+\subfile{secoes/01_abertura}
+\subfile{secoes/02_arquitetura_e_evolucao}
+\subfile{secoes/03_subssistemas_hw_sw}
+\subfile{secoes/04_metodologia_e_resultados_hil}
+\subfile{secoes/99_conclusao}
+
+\end{document}

@@ -1,0 +1,26 @@
+# Artefatos de compilacao LaTeX isolados em out/
+out/
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.nav
+*.out
+*.run.xml
+*.snm
+*.synctex.gz
+*.toc
+*.vrb
+*.dvi
+*.ps
+main.pdf
+secoes/*.pdf
+
+# Python / OS / IDE temporarios
+__pycache__/
+*.pyc
+.DS_Store
+*~

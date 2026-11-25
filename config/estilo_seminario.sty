@@ -1,0 +1,283 @@
+% ============================================================================
+% estilo_seminario.sty
+% Identidade visual UFMG para a apresentacao do projeto final de SoC.
+% Adaptado do modelo institucional em ../../seminar/seminario_cdc/.
+% ============================================================================
+\NeedsTeXFormat{LaTeX2e}[2020/10/01]
+\ProvidesPackage{estilo_seminario}[2026/11/25 v1.0 Estilo Beamer SoC - Identidade UFMG]
+
+% ---------------------------------------------------------------------------
+% 1. Pacotes base e tipografia
+% ---------------------------------------------------------------------------
+\RequirePackage[T1]{fontenc}
+\RequirePackage{lmodern}
+\RequirePackage[brazilian]{babel}
+\RequirePackage{csquotes}
+\RequirePackage{microtype}
+\RequirePackage{booktabs}
+\RequirePackage{etoolbox}
+\RequirePackage{listings}
+\RequirePackage{amsmath,amssymb}
+\RequirePackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds,shapes.geometric}
+
+% ---------------------------------------------------------------------------
+% 2. Tema Beamer oficial (Darmstadt)
+% ---------------------------------------------------------------------------
+\mode<presentation>
+
+\usetheme{Darmstadt}
+
+\renewcommand{\familydefault}{\sfdefault}
+\beamertemplatenavigationsymbolsempty
+\setbeamerfont{page number in head/foot}{size=\normalsize}
+
+% ---------------------------------------------------------------------------
+% 3. Paleta institucional UFMG e cores funcionais SoC
+% ---------------------------------------------------------------------------
+\definecolor{corComentario}{RGB}{150,150,150}
+\definecolor{corString}{RGB}{206,123,0}
+\definecolor{corPalavraChave}{RGB}{0,0,230}
+
+\definecolor{UFMGEscuro}{RGB}{102, 7, 8}
+\definecolor{UFMGPrimario}{RGB}{200, 0, 25}
+\definecolor{UFMGSecundario}{RGB}{186, 24, 27}
+\definecolor{UFMGTerciario}{RGB}{177, 167, 166}
+\definecolor{UFMGQuaternario}{RGB}{245, 243, 244}
+
+\definecolor{UFMGImportante}{RGB}{22, 26, 29}
+\definecolor{UFMGExemplos}{RGB}{164, 22, 26}
+\definecolor{UFMGGrafite}{RGB}{66, 70, 74}
+\definecolor{UFMGDiretiva}{RGB}{0, 110, 120}
+\definecolor{SoCAzulPS}{RGB}{24, 78, 119}
+\definecolor{SoCVerdePL}{RGB}{27, 102, 62}
+\definecolor{SoCAzulFundo}{RGB}{236, 244, 250}
+\definecolor{SoCVerdeFundo}{RGB}{236, 247, 240}
+\definecolor{SoCOuroBRAM}{RGB}{148, 92, 0}
+\definecolor{SoCOuroFundo}{RGB}{253, 246, 232}
+
+\setbeamercolor*{palette primary}{bg=UFMGPrimario,fg=white}
+\setbeamercolor*{palette secondary}{bg=UFMGSecundario,fg=white}
+\setbeamercolor*{palette tertiary}{bg=UFMGTerciario,fg=white}
+\setbeamercolor*{palette quaternary}{bg=UFMGQuaternario,fg=UFMGPrimario}
+\setbeamercolor{palette sidebar primary}{bg=UFMGPrimario,fg=white}
+\setbeamercolor{palette sidebar secondary}{bg=UFMGSecundario,fg=white}
+\setbeamercolor{palette sidebar tertiary}{bg=UFMGTerciario,fg=white}
+\setbeamercolor{palette sidebar quaternary}{bg=UFMGQuaternario,fg=white}
+\setbeamercolor{structure}{fg=UFMGPrimario}
+\setbeamercolor{section in toc}{fg=black}
+\setbeamercolor{subsection in toc}{fg=UFMGPrimario}
+\setbeamercolor{section in head/foot}{bg=UFMGEscuro,fg=white}
+\setbeamercolor{subsection in head/foot}{bg=UFMGSecundario,fg=white}
+
+\setbeamercolor{title}{fg=UFMGPrimario,bg=white}
+\setbeamercolor{author}{fg=black}
+\setbeamercolor{date}{fg=black}
+
+\setbeamerfont{author}{size=\scriptsize}
+\setbeamerfont{date}{size=\tiny}
+\setbeamerfont{title}{series=\bfseries}
+\setbeamerfont{subtitle}{series=\mdseries,size=\footnotesize}
+\setbeamerfont{frametitle}{series=\bfseries}
+\setbeamerfont{framesubtitle}{series=\mdseries}
+\setbeamerfont{footline}{size=\scriptsize}
+
+\setbeamertemplate{blocks}[rounded]
+
+\setbeamertemplate{itemize item}{\textbullet}
+\setbeamertemplate{itemize subitem}{\textemdash}
+\setbeamertemplate{itemize subsubitem}{\ensuremath{\circ}}
+
+\setbeamercolor{alerted text}{fg=UFMGImportante}
+\setbeamercolor{example text}{fg=UFMGExemplos}
+\setbeamercolor{block title}{bg=UFMGSecundario,fg=white}
+\setbeamercolor{block body}{bg=UFMGQuaternario,fg=UFMGImportante}
+\setbeamercolor{block title alerted}{bg=UFMGImportante,fg=white}
+\setbeamercolor{block body alerted}{bg=UFMGQuaternario,fg=UFMGImportante}
+\setbeamercolor{block title example}{bg=UFMGExemplos,fg=white}
+\setbeamercolor{block body example}{bg=UFMGQuaternario,fg=UFMGImportante}
+
+\newenvironment{bloco}[3]{%
+  \setbeamercolor{block body}{#2}%
+  \setbeamercolor{block title}{#3}%
+  \begin{block}{#1}}{\end{block}}
+
+% ---------------------------------------------------------------------------
+% 4. Rodape e Logo institucional no slide
+% ---------------------------------------------------------------------------
+\def\@footlinepayoff{}
+\newcommand{\footlinepayoff}[1]{\def\@footlinepayoff{#1}}
+
+\setbeamertemplate{footline}{%
+  \begin{beamercolorbox}[wd=\textwidth,ht=5mm,dp=3mm,rightskip=1cm,leftskip=1cm]{footline}
+  \insertframenumber/\inserttotalframenumber
+  \ifstrempty{\@footlinepayoff}{}{%
+    \usebeamerfont{footline}\hfill\@footlinepayoff
+  }
+  \end{beamercolorbox}%
+}
+
+\newcommand{\CaminhoLogo}{logo}
+\newcommand{\DefinirCaminhoLogo}[1]{\renewcommand{\CaminhoLogo}{#1}}
+
+\logo{%
+  \begin{tikzpicture}[overlay,remember picture]%
+  \node[left=0cm] at (current page.-27){%
+    \includegraphics[scale=0.2]{\CaminhoLogo}%
+  };
+  \end{tikzpicture}%
+}
+
+% ---------------------------------------------------------------------------
+% 5. Metadados e Template da Capa
+% ---------------------------------------------------------------------------
+\newcommand{\titulo}[1]{\def\@tituloLabel{#1}}
+\newcommand{\subtitulo}[1]{\def\@subtituloLabel{#1}}
+\newcommand{\nome}[1]{\def\@nomeLabel{#1}}
+\newcommand{\autor}[1]{\def\@autorLabel{#1}}
+\newcommand{\orientador}[1]{\def\@orientadorLabel{#1}}
+\newcommand{\coorientador}[1]{\def\@coorientadorLabel{#1}}
+\newcommand{\curso}[1]{\def\@cursoLabel{#1}}
+\newcommand{\local}[1]{\def\@localLabel{#1}}
+\newcommand{\dia}[1]{\def\@diaLabel{#1}}
+\newcommand{\mes}[1]{\def\@mesLabel{#1}}
+\newcommand{\ano}[1]{\def\@anoLabel{#1}}
+
+\newcommand{\CaminhoCapa}{capa}
+\newcommand{\DefinirCaminhoCapa}[1]{\renewcommand{\CaminhoCapa}{#1}}
+
+\setbeamertemplate{title page}{%
+  \vskip0pt plus 1filll%
+  \hspace{-12mm}%
+  \vspace{20mm}%
+  \begin{beamercolorbox}[wd=0.6\textwidth,sep=10pt,leftskip=8mm]{title}%
+    {\ifdef{\@tituloLabel}{{\usebeamerfont{title}\@tituloLabel}{\ifdef{\@subtituloLabel}{{\usebeamerfont{title}:}}{}}}{}}%
+
+    {\ifdef{\@subtituloLabel}{{\usebeamerfont{subtitle}\@subtituloLabel}}{}}\par\vspace{1.5ex}
+
+    {\ifdef{\@cursoLabel}{{\usebeamerfont{author}\usebeamercolor[fg]{author}\textbf{Disciplina: }\@cursoLabel}}{}}\par\vspace{0.8ex}
+
+    {\ifdef{\@nomeLabel}{{\usebeamerfont{author}\usebeamercolor[fg]{author}\@nomeLabel}}{}}%
+
+    {\ifdef{\@autorLabel}{{\usebeamerfont{author}\usebeamercolor[fg]{author}\textbf{Autor: }\@autorLabel}}{}}\par\vspace{0.8ex}
+
+    {\ifdef{\@orientadorLabel}{{\usebeamerfont{author}\usebeamercolor[fg]{author}\textbf{Orientador(a): }\@orientadorLabel}}{}\par\vspace{1.2ex}}%
+
+    {\ifdef{\@coorientadorLabel}{{\usebeamerfont{author}\usebeamercolor[fg]{author}\textbf{Coorientador(a): }\@coorientadorLabel}}{}}%
+
+    {\ifdef{\@localLabel}{{\usebeamerfont{date}\usebeamercolor[fg]{date}\@localLabel,{ }\@diaLabel{ }de \@mesLabel{ }de \@anoLabel}}{}}%
+  \end{beamercolorbox}%
+}
+
+\mode<all>
+
+% ---------------------------------------------------------------------------
+% 6. Listagens de Codigo-Fonte (VHDL-2008, C11, Tcl/Python/Shell)
+% ---------------------------------------------------------------------------
+\lstdefinestyle{socbase}{%
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\color{UFMGSecundario}\bfseries,
+  keywordstyle=[2]\color{UFMGDiretiva}\bfseries,
+  commentstyle=\color{UFMGGrafite}\itshape,
+  stringstyle=\color{UFMGEscuro},
+  numbers=left, numberstyle=\tiny\color{UFMGTerciario}, numbersep=6pt,
+  backgroundcolor=\color{UFMGQuaternario},
+  frame=single, rulecolor=\color{UFMGTerciario},
+  columns=fullflexible, keepspaces=true, showstringspaces=false,
+  breaklines=true, tabsize=2, aboveskip=0pt, belowskip=0pt,
+  xleftmargin=1.6em, framexleftmargin=1.2em,
+  extendedchars=true,
+  literate={á}{{\'a}}1 {à}{{\`a}}1 {ã}{{\~a}}1 {â}{{\^a}}1
+           {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1 {ó}{{\'o}}1
+           {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c c}}1
+           {Á}{{\'A}}1 {É}{{\'E}}1 {Ç}{{\c C}}1}
+
+\lstdefinelanguage{VHDL2008}{%
+  language=VHDL,
+  morekeywords=[2]{std_logic,std_logic_vector,unsigned,signed,rising_edge,
+    to_unsigned,to_integer,resize,ieee,numeric_std},
+  sensitive=false}
+
+\lstdefinelanguage{C11}{%
+  language=C,
+  morekeywords=[2]{uint8_t,uint16_t,uint32_t,uint64_t,int16_t,bool,size_t,
+    volatile,inline,uintptr_t},
+  sensitive=true}
+
+\lstdefinestyle{vhdlstyle}{style=socbase,language=VHDL2008}
+\lstdefinestyle{cstyle}{style=socbase,language=C11}
+\lstdefinestyle{scriptstyle}{style=socbase,language={},numbers=none,
+  morecomment=[l]{\#}}
+
+\lstnewenvironment{vhdlcode}[1][]{\lstset{style=vhdlstyle,#1}}{}
+\lstnewenvironment{ccode}[1][]{\lstset{style=cstyle,#1}}{}
+\lstnewenvironment{scriptcode}[1][]{\lstset{style=scriptstyle,#1}}{}
+
+\newcommand{\vhdlin}[1]{\lstinline[style=vhdlstyle,basicstyle=\ttfamily\small]|#1|}
+\newcommand{\cin}[1]{\lstinline[style=cstyle,basicstyle=\ttfamily\small]|#1|}
+
+% ---------------------------------------------------------------------------
+% 7. Elementos TikZ para Arquitetura PS/PL/BRAM/SPI
+% ---------------------------------------------------------------------------
+\tikzset{
+  soc seta/.style={-{Stealth[length=2mm,width=1.5mm]},thick,draw=UFMGImportante},
+  soc seta bidir/.style={{Stealth[length=2mm,width=1.5mm]}-{Stealth[length=2mm,width=1.5mm]},thick,draw=UFMGImportante},
+  soc fio/.style={thick,draw=UFMGImportante},
+  soc caixa/.style={draw=UFMGEscuro,thick,fill=white,rounded corners=2pt,
+    minimum height=0.85cm,minimum width=1.8cm,align=center,font=\scriptsize,inner sep=4pt},
+  soc ps/.style={draw=SoCAzulPS,thick,fill=SoCAzulFundo,rounded corners=2pt,
+    minimum height=0.85cm,minimum width=1.9cm,align=center,font=\scriptsize,inner sep=4pt},
+  soc pl/.style={draw=SoCVerdePL,thick,fill=SoCVerdeFundo,rounded corners=2pt,
+    minimum height=0.85cm,minimum width=1.9cm,align=center,font=\scriptsize,inner sep=4pt},
+  soc bram/.style={draw=SoCOuroBRAM,thick,fill=SoCOuroFundo,rounded corners=2pt,
+    minimum height=0.85cm,minimum width=1.7cm,align=center,font=\scriptsize,inner sep=4pt},
+  soc esp32/.style={draw=UFMGSecundario,thick,fill=UFMGQuaternario,rounded corners=2pt,
+    minimum height=0.85cm,minimum width=1.8cm,align=center,font=\scriptsize,inner sep=4pt},
+  soc dominio/.style={draw=UFMGTerciario,dashed,thick,rounded corners=4pt,
+    fill=UFMGQuaternario!60,inner sep=3mm},
+  soc sinal/.style={font=\scriptsize\ttfamily,text=UFMGImportante},
+  soc rotulo/.style={font=\scriptsize\bfseries,text=UFMGGrafite},
+  pics/bramdp/.style={code={%
+    \draw[thick,draw=SoCOuroBRAM,fill=SoCOuroFundo,rounded corners=2pt] (-0.9,-0.45) rectangle (0.9,0.45);
+    \node[font=\tiny\bfseries,text=SoCOuroBRAM] at (0,0.22) {BRAM 8 KB};
+    \node[font=\tiny,text=UFMGImportante] at (-0.48,-0.15) {Port A};
+    \node[font=\tiny,text=UFMGImportante] at (0.48,-0.15) {Port B};
+    \coordinate (-porta) at (-0.9,0);
+    \coordinate (-portb) at (0.9,0);}}
+}
+
+% ---------------------------------------------------------------------------
+% 8. Macros e ambientes funcionais para a apresentacao SoC
+% ---------------------------------------------------------------------------
+\newcommand{\fonte}[1]{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=south west,font=\tiny,text=UFMGGrafite,inner sep=0pt]
+      at ([xshift=1.2em,yshift=8mm]current page.south west)
+      {Fonte: #1.};
+  \end{tikzpicture}}
+
+\newenvironment{pontoschave}[1][Pontos-chave]{\begin{block}{#1}}{\end{block}}
+
+\newenvironment{roteiro}{%
+  \small\renewcommand{\arraystretch}{1.2}%
+  \begin{tabular}{@{}lp{.58\linewidth}l@{}}
+    \toprule
+    \textbf{Se\c{c}\~ao} & \textbf{Escopo T\'ecnico} & \textbf{Subsistema}\\
+    \midrule}{\bottomrule\end{tabular}}
+\newcommand{\linharoteiro}[3]{#1 & #2 & #3\\}
+
+% Caminhos globais e modulares de imagens
+\newcommand{\seminario@setgraphicspath}[1]{%
+  \ifcsname subfiles@graphicspath\endcsname
+    \subfiles@graphicspath{#1}%
+  \else
+    \graphicspath{#1}%
+  \fi}
+
+\seminario@setgraphicspath{{config/}{../config/}{figuras/}{../figuras/}}
+
+\newcommand{\iniciarSecao}[2][]{%
+  \seminario@setgraphicspath{{config/}{../config/}{figuras/}{../figuras/}}%
+  \ifstrempty{#1}{\section{#2}}{\section[#1]{#2}}}
+
+\endinput

@@ -1,0 +1,43 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+
+\iniciarSecao[Conclus\~ao]{Conclus\~ao e Refer\^encias}
+
+% ---------------------------------------------------------------------------
+% Sintese Comparativa, Licoes e Trabalhos Futuros
+% ---------------------------------------------------------------------------
+\begin{frame}
+  \frametitle{S\'intese Comparativa e Trabalhos Futuros}
+  \begin{columns}[T]
+    \begin{column}{.48\textwidth}
+      \begin{block}{S\'intese PS vs. PL vs. H\'ibrido}
+        \begin{itemize}
+          \item \textbf{Particionamento \'otimo (Cen\'ario 3):} compress\~ao LZSS em software (650 MHz + cache) combinada com cifragem AES-128-CTR em hardware (100 MHz).
+          \item \textbf{Robustez arquitetural:} BRAM Dual-Port eliminou travamentos de DMA em fluxos de tamanho vari\'avel (ADR-017).
+          \item \textbf{Confiabilidade HIL:} 30/30 rajadas SPI sem perdas e folga temporal positiva (\texttt{WNS = +0,551 ns}).
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{.48\textwidth}
+      \begin{pontoschave}[Li\c{c}\~oes e Trabalhos Futuros]
+        \begin{itemize}
+          \item \textbf{Li\c{c}\~ao RTL:} lat\^encia de leitura de 1 ciclo em BRAM exige estados de espera expl\'icitos (ADR-019).
+          \item \textbf{Medi\c{c}\~ao isolada:} completar s\'intese isolada dos Cen\'arios 2 e 3 para preencher c\'elulas pendentes na matriz.
+          \item \textbf{Paralelismo em PL:} substituir busca linear do \texttt{lzss\_accel} por comparadores paralelos ou tabelas hash em BRAM.
+        \end{itemize}
+      \end{pontoschave}
+    \end{column}
+  \end{columns}
+  \fonte{STATUS.md, utils/memory/decisions.md, SocProjRepo}
+\end{frame}
+
+% ---------------------------------------------------------------------------
+% Referencias Bibliograficas
+% ---------------------------------------------------------------------------
+\begin{frame}[allowframebreaks]
+  \frametitle{Refer\^encias Bibliogr\'aficas}
+  \nocite{*}
+  \printbibliography
+\end{frame}
+
+\end{document}
