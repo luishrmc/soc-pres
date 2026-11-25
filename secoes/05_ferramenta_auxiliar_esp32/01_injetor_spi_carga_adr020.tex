@@ -1,0 +1,28 @@
+% Slide S15: Ferramenta auxiliar de bancada - Injetor ESP32 e carga ADR-020
+\begin{frame}
+  \frametitle{Ferramenta Auxiliar de Bancada: Injetor ESP32 e Carga ADR-020}
+  \begin{columns}[T]
+    \begin{column}{.50\textwidth}
+      \begin{itemize}
+        \item \textbf{Papel exclusivo de est\'imulo:} ESP32-WROOM (240 MHz, ESP-IDF v6.1) atua apenas como gerador de tr\'afego SPI de bancada \autocite{EspressifESPIDF}.
+        \item \textbf{Dataset em flash (\texttt{seed=42}):} 30 quadros fixos de \textbf{1024 B} (64 registros de 16 B) em 3 perfis: \textit{Quiescent}, \textit{Dynamic} e \textit{Chaotic}.
+        \item \textbf{Enlace VSPI:} Modo 0 a 2 MHz com suporte at\'e 25 MHz.
+      \end{itemize}
+    \end{column}
+    \begin{column}{.46\textwidth}
+      \begin{block}{\texttt{TelemetryFrame} (1035 B no fio)}
+        \scriptsize
+        \begin{tabular}{@{}lp{.64\linewidth}@{}}
+          \toprule
+          \textbf{Bytes} & \textbf{Campo}\\
+          \midrule
+          \texttt{0..7} & \texttt{0xA5}, tipo \texttt{0x02}, \texttt{seq\_id}, \texttt{len=1024}, pad\\
+          \texttt{8..1031} & Payload 1024 B (alinhado em 32 bits)\\
+          \texttt{1032..1034} & CRC-16-CCITT (\texttt{0x1021}) + EOF \texttt{0x5A}\\
+          \bottomrule
+        \end{tabular}
+      \end{block}
+    \end{column}
+  \end{columns}
+  \fonte{docs/esp32/SPI\_INJECTOR.md, spi\_frame.h, ADR-020}
+\end{frame}

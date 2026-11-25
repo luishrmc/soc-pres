@@ -1,0 +1,30 @@
+% Slide S12: Coprocessador aes_accel (AES-128-CTR)
+\begin{frame}
+  \frametitle{Coprocessador \texttt{aes\_accel} (AES-128-CTR, \texttt{0x43C10000})}
+  \begin{columns}[T]
+    \begin{column}{.48\textwidth}
+      \begin{itemize}
+        \item \textbf{Padr\~ao:} NIST FIPS-197 e SP 800-38A; apenas cifragem direta poupa $>50\%$ de l\'ogica \autocite{NISTFIPS197,NISTSP80038A}.
+        \item \textbf{Datapath:} 10 rodadas iterativas (\textbf{11 ciclos/bloco} de 16 B) com expans\~ao de chave \textit{on-the-fly}.
+        \item \textbf{Sem DSPs:} multiplica\c{c}\~ao em $GF(2^8)$ via \texttt{xtime}; S-Box ROM em LUTs.
+        \item \textbf{Cauda desalinhada:} preserva \textit{halfwords} em 1154 B usando \texttt{bram\_out\_we = "0011"}.
+      \end{itemize}
+    \end{column}
+    \begin{column}{.48\textwidth}
+      \begin{block}{Mapa CSR \texttt{aes\_accel} (\texttt{0x43C10000})}
+        \scriptsize
+        \begin{tabular}{@{}ll@{}}
+          \toprule
+          \textbf{Offset} & \textbf{Registrador}\\
+          \midrule
+          \texttt{0x00..0x10} & CTRL, STATUS, SRC/DST\_LEN, CYCLES\\
+          \texttt{0x14..0x20} & \texttt{KEY\_0..3} (128 bits)\\
+          \texttt{0x24..0x2C} & \texttt{IV\_0..2} (96 bits de nonce)\\
+          \texttt{0x30} & \texttt{COUNTER\_INIT} (32 bits)\\
+          \bottomrule
+        \end{tabular}
+      \end{block}
+    \end{column}
+  \end{columns}
+  \fonte{docs/hw/AES\_ACCEL.md, aes\_accel.vhdl, docs/AES\_CTR\_ALGORITHM.md}
+\end{frame}

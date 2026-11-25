@@ -1,28 +1,25 @@
 ---
 name: beamer-soc-design
-description: Redigir e diagramar frames Beamer 16:9 em secoes/*.tex usando o estilo UFMG, listagens VHDL/C e diagramas TikZ PS/PL/BRAM/SPI.
+description: Redigir e diagramar slides atomicos em secoes/<secao>/<NN>_<slug>.tex usando o estilo UFMG, listagens VHDL/C e diagramas TikZ.
 ---
 
 # Beamer SoC Design
 
-Guia de redacao modular de slides em LaTeX Beamer 16:9 para o projeto SoC Zynq-7010.
+Guia de redacao modular por slide atomico em LaTeX Beamer 16:9 para o projeto SoC Zynq-7010.
 
 ## Convencoes Estruturais
 
-- Todo arquivo em `secoes/*.tex` deve iniciar com `\documentclass[../main.tex]{subfiles}`, `\begin{document}` e terminar com `\end{document}`.
-- Secoes tematicas (`02` a `99`) iniciam com `\iniciarSecao[Rotulo Curto]{Titulo Completo}`.
-- Todo frame tecnico deve incluir `\fonte{<referencia em ../soc-proj>}` no rodape.
-- Frames com `vhdlcode`, `ccode` ou `scriptcode` exigem `\begin{frame}[fragile]`.
+- Cada pasta `secoes/<secao>/` possui um agregador `secao.tex` (`\documentclass[../../main.tex]{subfiles}`) que chama `\iniciarSecao` e inclui os slides via `\input{\subfix{secoes/<secao>/<NN>_<slug>}}`.
+- Cada arquivo atomico `<NN>_<slug>.tex` contem apenas o(s) `\begin{frame}...\end{frame}` correspondente(s).
+- Imagens devem usar `\subfix{figuras/<arquivo>}` para funcionar na compilacao isolada da secao e na global.
+- Todo frame tecnico deve incluir `\fonte{...}` no rodape; frames com `vhdlcode`/`ccode`/`scriptcode` exigem `[fragile]`.
 
-## Recursos Disponiveis em `config/estilo_seminario.sty`
+## Regras Especificas de Secao
 
-- **Blocos:** `pontoschave`, `block`, `alertblock`, `exampleblock`, `bloco`.
-- **Codigo:** `vhdlcode`, `ccode`, `scriptcode`, `\vhdlin{...}`, `\cin{...}`.
-- **TikZ:** estilos `soc ps`, `soc pl`, `soc bram`, `soc esp32`, `soc caixa`, `soc dominio`, `soc seta`, `soc seta bidir`, `pics/bramdp`.
-- **Figuras locais:** `figuras/cora7z_top.png`, `figuras/cora7z_soc_architecture.pdf` e SVGs/diagramas em `figuras/`.
+- `02_arquitetura_sistema`: **proibida** qualquer mencao a historico descartado (`RLE`, `LZ4`, `ChaCha20`, `AXI DMA`, `axis_accel_mux`).
+- `05_ferramenta_auxiliar_esp32`: maximo 2 slides enfatizando papel auxiliar de bancada.
 
 ## Limites de Densidade e Estilo
 
-- Maximo de **6 bullets** por ambiente `itemize` (1 a 2 linhas por item).
+- Maximo de **6 bullets** por `itemize` (1 a 2 linhas por item).
 - Proibido travessao Unicode (`—` ou `–`) em prosa e jargoes promocionais vazios.
-- Negrito (`\textbf{}`) restrito a 1 ou 2 termos-ancora por item.

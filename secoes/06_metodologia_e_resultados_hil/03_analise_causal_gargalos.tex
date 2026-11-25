@@ -1,0 +1,25 @@
+% Slide S19: Analise causal - Ganho do aes_accel vs Risco R9 no lzss_accel
+\begin{frame}
+  \frametitle{An\'alise Causal: Ganho do \texttt{aes\_accel} vs. Risco R9 no \texttt{lzss\_accel}}
+  \begin{columns}[T]
+    \begin{column}{.48\textwidth}
+      \begin{block}{Por que o Cen\'ario 3 Vence (1,17x--1,24x)}
+        \begin{itemize}
+          \item Modelo exato do AES: $C_{\text{PL}}(N) = 10 + 11\lceil N/16\rceil + 3\lceil N/4\rceil$.
+          \item Cifra em \textbf{668 a 1.679 ciclos} (6,68 a 16,79 us a 100 MHz), poupando 474k a 1.215k ciclos de CPU.
+          \item Est\'agio de cifragem consome apenas 117.575 ciclos CPU no Cen\'ario 4 (447 B).
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{.48\textwidth}
+      \begin{pontoschave}[Por que Risco R9 Ocorreu no LZSS PL]
+        \begin{itemize}
+          \item Busca sequencial na Porta B a 100 MHz (201k a 745k ciclos PL) domina $>96\%$ do Cen\'ario 4 (3.477.406 ciclos CPU).
+          \item Cortex-A9 a 650 MHz executa \texttt{lzss\_sw} em cache L1 (32 KB) sem esperas de barramento.
+          \item Raz\~ao $\Delta\text{CPU}/\Delta\text{PL} \approx 15{,}6\times$ evidencia custo de c\'opia e polling via \texttt{M\_AXI\_GP0} (50 MHz).
+        \end{itemize}
+      \end{pontoschave}
+    \end{column}
+  \end{columns}
+  \fonte{BENCHMARK\_RESULTS.md (\S 3.3, \S 4), STATUS.md, Riscos\_e\_Bloqueios.csv}
+\end{frame}

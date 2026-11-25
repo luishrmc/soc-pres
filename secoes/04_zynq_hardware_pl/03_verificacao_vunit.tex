@@ -1,0 +1,21 @@
+% Slide S13: Verificacao estatica e simulacao RTL (VUnit + GHDL)
+\begin{frame}
+  \frametitle{Verifica\c{c}\~ao Est\'atica e Simula\c{c}\~ao RTL (VUnit + GHDL)}
+  \scriptsize
+  \renewcommand{\arraystretch}{1.2}
+  \begin{tabular}{@{}lll@{}}
+    \toprule
+    \textbf{Su\'ite / Gate} & \textbf{Cobertura} & \textbf{Resultado}\\
+    \midrule
+    \texttt{tb\_lzss\_accel.vhdl} & CSRs + vetores ouro 1024 B (\texttt{447 B}, \texttt{1000 B}, \texttt{1154 B}) & 7/7 PASS (GHDL)\\
+    \texttt{tb\_aes\_accel.vhdl} & NIST F.5.1, 64 blocos (1024 B) e cauda 1154 B & 5/5 PASS (GHDL)\\
+    \texttt{vhdl-lint} / \texttt{c-lint} & An\'alise est\'atica VHDL-2008 e C11 (\texttt{-Wall -Wextra -Werror}) & 100\% PASS\\
+    Mocks em host (C11) & 30 quadros \texttt{seed=42} e parsing \texttt{1035 B} / ACK \texttt{15 B} & PASS\\
+    \bottomrule
+  \end{tabular}
+  \par\vspace{1.2ex}
+  \begin{pontoschave}[Equival\^encia Funcional Pr\'e-HIL]
+    \small Todos os vetores de 1024 B gerados em Python foram validados bit-a-bit entre RTL VHDL-2008 e modelos C11 antes da execu\c{c}\~ao em bancada.
+  \end{pontoschave}
+  \fonte{TEST\_PLAN.md, BENCHMARK\_RESULTS.md (\S 5), README.md}
+\end{frame}

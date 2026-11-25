@@ -1,0 +1,25 @@
+% Slide S11: Coprocessador lzss_accel e correcao ADR-019
+\begin{frame}[fragile]
+  \frametitle{Coprocessador \texttt{lzss\_accel} (VHDL-2008) e Corre\c{c}\~ao ADR-019}
+  \begin{columns}[T]
+    \begin{column}{.48\textwidth}
+      \begin{itemize}
+        \item \textbf{CSRs (\texttt{0x43C00000}):} \texttt{0x00} CTRL, \texttt{0x04} STATUS, \texttt{0x08} SRC\_LEN, \texttt{0x0C} DST\_LEN, \texttt{0x10} CYCLE\_COUNT.
+        \item \textbf{Par\^ametros:} janela de 256 B, \textit{lookahead} de 16 B, casamento m\'inimo de 3 B.
+        \item \textbf{ADR-019:} lat\^encia s\'incrona de 1 ciclo da BRAM exigiu estado \texttt{bram\_wait\_r} em 4 pares \texttt{*\_REQ/*\_WAIT}.
+      \end{itemize}
+    \end{column}
+    \begin{column}{.48\textwidth}
+      \begin{vhdlcode}
+type fsm_state_t is (
+  ST_IDLE, ST_WRITE_HDR_0, ST_WRITE_HDR_1,
+  ST_INIT_LA_REQ, ST_INIT_LA_WAIT,
+  ST_LOAD_LA_REQ, ST_LOAD_LA_WAIT,
+  ST_SEARCH_REQ, ST_SEARCH_WAIT,
+  ST_CMP_REQ, ST_CMP_WAIT, ST_DONE
+);
+      \end{vhdlcode}
+    \end{column}
+  \end{columns}
+  \fonte{docs/hw/LZSS\_ACCEL.md, lzss\_accel.vhdl, ADR-019}
+\end{frame}

@@ -1,0 +1,19 @@
+% Slide S06: Topologia fisica e logica no Zynq-7000
+\begin{frame}
+  \frametitle{Topologia F\'isica e L\'ogica no Zynq-7000 (Cora Z7-10)}
+  \begin{columns}[T]
+    \begin{column}{.48\textwidth}
+      \begin{itemize}
+        \item \textbf{PS Cortex-A9 (650 MHz):} Core 0 bare-metal com 512 MB DDR3, 32 KB L1 e 512 KB L2.
+        \item \textbf{Barramento AXI (\texttt{FCLK\_CLK0}):} \texttt{M\_AXI\_GP0} a 50 MHz controla SPI, BRAM Porta A e CSRs.
+        \item \textbf{Dom\'inio PL (\texttt{FCLK\_CLK1}):} aceleradores \texttt{lzss\_accel} e \texttt{aes\_accel} a 100 MHz.
+        \item \textbf{Ingest\~ao SPI (ADR-012/016):} \texttt{axi\_quad\_spi\_0} (\texttt{0x41E00000}) no Header J7 (\texttt{H15}, \texttt{T12}, \texttt{W15}, \texttt{F16}) e trigger EMIO \texttt{Y18}.
+      \end{itemize}
+    \end{column}
+    \begin{column}{.48\textwidth}
+      \centering
+      \includegraphics[width=\linewidth]{cora7z_top.png}
+    \end{column}
+  \end{columns}
+  \fonte{README.md, cora\_z7\_io.xdc, ADR-012, ADR-016}
+\end{frame}

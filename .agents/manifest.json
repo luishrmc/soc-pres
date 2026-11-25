@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "project": "soc-pres-zynq7010",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "language": "pt-BR",
   "model_profile": "Gemini 4 Hydrogen",
-  "topology": "Supervisor-Worker com Dual-Loop (Inner Loop Deterministico + Outer Loop Adversarial e Gate Humano)",
+  "topology": "Supervisor-Worker Paralelo por Secao (Dual-Loop por Diretorio + Consolidacao Serializada)",
   "source_of_truth": {
     "root": "../soc-proj",
     "authoritative": [
@@ -12,8 +12,13 @@
       "../soc-proj/utils/plan/STATUS.md",
       "../soc-proj/utils/plan/Matriz_de_Testes_e_Métricas.csv",
       "../soc-proj/utils/plan/Checklist_de_Entregaveis.csv",
+      "../soc-proj/utils/plan/Riscos_e_Bloqueios.csv",
       "../soc-proj/utils/memory/INDEX.md",
       "../soc-proj/utils/memory/decisions.md",
+      "../soc-proj/utils/memory/lessons.md",
+      "../soc-proj/cora7z/test_results/TEST_PLAN.md",
+      "../soc-proj/cora7z/test_results/BENCHMARK_RESULTS.md",
+      "../soc-proj/cora7z/test_results/benchmark_matrix_consolidated.csv",
       "../soc-proj/docs/hw/LZSS_ACCEL.md",
       "../soc-proj/docs/hw/AES_ACCEL.md",
       "../soc-proj/docs/sw/PIPELINE_MGR.md",
@@ -56,6 +61,12 @@
     "main.tex",
     ".agents/manifest.json"
   ],
+  "shared_serialized": [
+    "bib/referencias.bib",
+    "utils/memory/INDEX.md",
+    "utils/memory/decisions.md",
+    "utils/memory/lessons.md"
+  ],
   "gates_by_stage": {
     "pre_task": ["pre-task-audit"],
     "inner_loop": ["boundary-guard", "slide-style-linter", "fact-sync-check", "post-write-compile"],
@@ -66,7 +77,7 @@
     {
       "name": "orchestrator-agent",
       "definition": ".agents/agents/orchestrator-agent.md",
-      "role": "Supervisor do DAG modular, memoria persistente, limites de iteracao e Gate Humano (nao edita .tex)",
+      "role": "Supervisor de secao ou consolidacao DAG, memoria persistente, convergencia e Gate Humano (nao edita .tex)",
       "model": "Gemini 4 Hydrogen",
       "thinking_level": "HIGH",
       "tools_allowed": ["run_command", "send_message", "view_file", "invoke_subagent", "write_to_file", "replace_file_content"],
@@ -91,7 +102,7 @@
     {
       "name": "content-retriever-agent",
       "definition": ".agents/agents/content-retriever-agent.md",
-      "role": "Extrator factual somente leitura da Camada Autoritativa de ../soc-proj com citacao exata de arquivo e ADR",
+      "role": "Extrator factual somente leitura da Camada Autoritativa de ../soc-proj com citacao exata",
       "model": "Gemini 4 Hydrogen",
       "thinking_level": "LOW/MEDIUM",
       "tools_allowed": ["view_file", "run_command"],
@@ -105,7 +116,7 @@
     {
       "name": "slide-author-agent",
       "definition": ".agents/agents/slide-author-agent.md",
-      "role": "Redator e diagramador de frames Beamer 16:9 em secoes/*.tex",
+      "role": "Redator e diagramador de arquivos atomicos de slide em secoes/<secao>/<slide>.tex",
       "model": "Gemini 4 Hydrogen",
       "thinking_level": "HIGH",
       "tools_allowed": ["view_file", "write_to_file", "replace_file_content"],
@@ -129,7 +140,7 @@
     {
       "name": "design-critic-agent",
       "definition": ".agents/agents/design-critic-agent.md",
-      "role": "Revisor adversarial somente leitura no Outer Loop (fidelidade a ../soc-proj, densidade visual e coerencia)",
+      "role": "Revisor adversarial somente leitura no Outer Loop por secao",
       "model": "Gemini 4 Hydrogen",
       "thinking_level": "HIGH",
       "tools_allowed": ["view_file"],
@@ -147,7 +158,7 @@
     {
       "name": "compiler-agent",
       "definition": ".agents/agents/compiler-agent.md",
-      "role": "Compilador deterministico LaTeX em out/ e analisador de warnings",
+      "role": "Compilador deterministico LaTeX em out/ com -jobname isolado por secao",
       "model": "Gemini 4 Hydrogen",
       "thinking_level": "LOW",
       "tools_allowed": ["run_command", "view_file"],
@@ -168,33 +179,122 @@
   "pipeline_sequence": [
     {
       "step_id": "01_abertura",
-      "target_file": "secoes/01_abertura.tex",
-      "title": "Capa, agenda, motivacao e objetivos na Cora Z7-10",
-      "sources": ["../soc-proj/README.md", "../soc-proj/utils/TEMA.md"]
+      "section_dir": "secoes/01_abertura",
+      "aggregator": "secoes/01_abertura/secao.tex",
+      "slides": [
+        "secoes/01_abertura/01_capa.tex",
+        "secoes/01_abertura/02_agenda.tex",
+        "secoes/01_abertura/03_motivacao_requisitos.tex",
+        "secoes/01_abertura/04_alternativas_roteiro.tex"
+      ],
+      "write_scope": [
+        "secoes/01_abertura/**",
+        "utils/memory/modules/01_abertura.md",
+        "utils/memory/handoff/01_abertura.md"
+      ],
+      "title": "Abertura, motivacao, requisitos e roteiro na Cora Z7-10",
+      "sources": ["../soc-proj/README.md", "../soc-proj/utils/TEMA.md", "../soc-proj/utils/Projeto Final.pdf"]
     },
     {
-      "step_id": "02_arquitetura_e_evolucao",
-      "target_file": "secoes/02_arquitetura_e_evolucao.tex",
-      "title": "Topologia PS/PL + ESP32, pivo ADR-012/017 e pipeline Compress-then-Encrypt",
-      "sources": ["../soc-proj/utils/memory/decisions.md", "../soc-proj/docs/diagrams/cora7z_top.png", "../soc-proj/README.md"]
+      "step_id": "02_arquitetura_sistema",
+      "section_dir": "secoes/02_arquitetura_sistema",
+      "aggregator": "secoes/02_arquitetura_sistema/secao.tex",
+      "slides": [
+        "secoes/02_arquitetura_sistema/01_pipeline_compress_encrypt.tex",
+        "secoes/02_arquitetura_sistema/02_topologia_zynq.tex",
+        "secoes/02_arquitetura_sistema/03_desacoplamento_bram.tex"
+      ],
+      "write_scope": [
+        "secoes/02_arquitetura_sistema/**",
+        "utils/memory/modules/02_arquitetura_sistema.md",
+        "utils/memory/handoff/02_arquitetura_sistema.md"
+      ],
+      "title": "Arquitetura final (LZSS + AES-128-CTR), topologia Zynq-7000 e BRAM Dual-Port",
+      "sources": ["../soc-proj/README.md", "../soc-proj/cora7z/app/hw/utils/cora_z7_io.xdc", "../soc-proj/utils/memory/decisions.md"]
     },
     {
-      "step_id": "03_subssistemas_hw_sw",
-      "target_file": "secoes/03_subssistemas_hw_sw.tex",
-      "title": "VHDL-2008 (lzss_accel, aes_accel), firmware C11 bare-metal e injetor ESP32",
-      "sources": ["../soc-proj/docs/hw/LZSS_ACCEL.md", "../soc-proj/docs/hw/AES_ACCEL.md", "../soc-proj/docs/sw/PIPELINE_MGR.md", "../soc-proj/docs/esp32/SPI_INJECTOR.md"]
+      "step_id": "03_zynq_software_ps",
+      "section_dir": "secoes/03_zynq_software_ps",
+      "aggregator": "secoes/03_zynq_software_ps/secao.tex",
+      "slides": [
+        "secoes/03_zynq_software_ps/01_orquestrador_pipeline_mgr.tex",
+        "secoes/03_zynq_software_ps/02_instrumentacao_pmu_sec01.tex",
+        "secoes/03_zynq_software_ps/03_modelos_referencia_sw.tex"
+      ],
+      "write_scope": [
+        "secoes/03_zynq_software_ps/**",
+        "utils/memory/modules/03_zynq_software_ps.md",
+        "utils/memory/handoff/03_zynq_software_ps.md"
+      ],
+      "title": "Subsistema Zynq PS: firmware C11, PCFG_DONE, ARM PMU, SEC-01 e modelos SW",
+      "sources": ["../soc-proj/docs/sw/PIPELINE_MGR.md", "../soc-proj/docs/sw/AXI_SPI_RECEIVER.md", "../soc-proj/docs/sw/LZSS_SW.md", "../soc-proj/docs/sw/AES_CTR_SW.md"]
     },
     {
-      "step_id": "04_metodologia_e_resultados_hil",
-      "target_file": "secoes/04_metodologia_e_resultados_hil.tex",
-      "title": "Matriz ADR-020, resultados empiricos HIL, recursos FPGA, Risco R9 e Cenario 3",
-      "sources": ["../soc-proj/utils/plan/Matriz_de_Testes_e_Métricas.csv", "../soc-proj/utils/plan/STATUS.md", "../soc-proj/README.md", "../soc-proj/docs/adr/0020-fixed-1024b-benchmark-payload.md"]
+      "step_id": "04_zynq_hardware_pl",
+      "section_dir": "secoes/04_zynq_hardware_pl",
+      "aggregator": "secoes/04_zynq_hardware_pl/secao.tex",
+      "slides": [
+        "secoes/04_zynq_hardware_pl/01_coprocessador_lzss.tex",
+        "secoes/04_zynq_hardware_pl/02_coprocessador_aes.tex",
+        "secoes/04_zynq_hardware_pl/03_verificacao_vunit.tex",
+        "secoes/04_zynq_hardware_pl/04_sintese_ocupacao_fpga.tex"
+      ],
+      "write_scope": [
+        "secoes/04_zynq_hardware_pl/**",
+        "utils/memory/modules/04_zynq_hardware_pl.md",
+        "utils/memory/handoff/04_zynq_hardware_pl.md"
+      ],
+      "title": "Subsistema Zynq PL: VHDL-2008, VUnit 12/12 e sintese XC7Z010",
+      "sources": ["../soc-proj/docs/hw/LZSS_ACCEL.md", "../soc-proj/docs/hw/AES_ACCEL.md", "../soc-proj/cora7z/test_results/BENCHMARK_RESULTS.md"]
+    },
+    {
+      "step_id": "05_ferramenta_auxiliar_esp32",
+      "section_dir": "secoes/05_ferramenta_auxiliar_esp32",
+      "aggregator": "secoes/05_ferramenta_auxiliar_esp32/secao.tex",
+      "slides": [
+        "secoes/05_ferramenta_auxiliar_esp32/01_injetor_spi_carga_adr020.tex",
+        "secoes/05_ferramenta_auxiliar_esp32/02_sincronismo_hil_zerodrop.tex"
+      ],
+      "write_scope": [
+        "secoes/05_ferramenta_auxiliar_esp32/**",
+        "utils/memory/modules/05_ferramenta_auxiliar_esp32.md",
+        "utils/memory/handoff/05_ferramenta_auxiliar_esp32.md"
+      ],
+      "title": "Ferramenta auxiliar ESP32: injetor SPI 1035 B e captura zero-drop",
+      "sources": ["../soc-proj/docs/esp32/SPI_INJECTOR.md", "../soc-proj/cora7z/test_results/BENCHMARK_RESULTS.md"]
+    },
+    {
+      "step_id": "06_metodologia_e_resultados_hil",
+      "section_dir": "secoes/06_metodologia_e_resultados_hil",
+      "aggregator": "secoes/06_metodologia_e_resultados_hil/secao.tex",
+      "slides": [
+        "secoes/06_metodologia_e_resultados_hil/01_fidelidade_compressao.tex",
+        "secoes/06_metodologia_e_resultados_hil/02_matriz_experimental_hil.tex",
+        "secoes/06_metodologia_e_resultados_hil/03_analise_causal_gargalos.tex"
+      ],
+      "write_scope": [
+        "secoes/06_metodologia_e_resultados_hil/**",
+        "utils/memory/modules/06_metodologia_e_resultados_hil.md",
+        "utils/memory/handoff/06_metodologia_e_resultados_hil.md"
+      ],
+      "title": "Metodologia ADR-020, resultados HIL N=20, Cenario 3 e Risco R9",
+      "sources": ["../soc-proj/utils/plan/Matriz_de_Testes_e_Métricas.csv", "../soc-proj/cora7z/test_results/BENCHMARK_RESULTS.md", "../soc-proj/utils/plan/STATUS.md"]
     },
     {
       "step_id": "99_conclusao",
-      "target_file": "secoes/99_conclusao.tex",
+      "section_dir": "secoes/99_conclusao",
+      "aggregator": "secoes/99_conclusao/secao.tex",
+      "slides": [
+        "secoes/99_conclusao/01_sintese_licoes_futuro.tex",
+        "secoes/99_conclusao/02_referencias.tex"
+      ],
+      "write_scope": [
+        "secoes/99_conclusao/**",
+        "utils/memory/modules/99_conclusao.md",
+        "utils/memory/handoff/99_conclusao.md"
+      ],
       "title": "Sintese comparativa, licoes aprendidas, trabalhos futuros e referencias",
-      "sources": ["../soc-proj/README.md", "../soc-proj/utils/plan/STATUS.md", "bib/referencias.bib"]
+      "sources": ["../soc-proj/utils/plan/STATUS.md", "../soc-proj/utils/memory/lessons.md", "bib/referencias.bib"]
     }
   ]
 }

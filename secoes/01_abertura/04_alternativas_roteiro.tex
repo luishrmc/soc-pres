@@ -1,0 +1,17 @@
+% Slide S04: Alternativas de solucao e roteiro da apresentacao
+\begin{frame}
+  \frametitle{Alternativas de Solu\c{c}\~ao e Roteiro do Projeto}
+  \scriptsize
+  \begin{roteiro}
+    \linharoteiro{Se\c{c}\~oes 1--2}{Escopo, arquitetura Zynq-7000 e BRAM Dual-Port}{Sistema Global}
+    \linharoteiro{Se\c{c}\~ao 3}{Firmware bare-metal C11, PMU, SEC-01 e modelos SW}{Zynq PS (650 MHz)}
+    \linharoteiro{Se\c{c}\~ao 4}{Coprocessadores VHDL-2008, VUnit e s\'intese XC7Z010}{Zynq PL (100 MHz)}
+    \linharoteiro{Se\c{c}\~ao 5}{Injetor SPI de bancada (1035 B) e captura zero-drop}{ESP32 Auxiliar}
+    \linharoteiro{Se\c{c}\~oes 6--7}{Matriz HIL (N=20), Risco R9, s\'intese e refer\^encias}{Resultados}
+  \end{roteiro}
+  \par\vspace{1.2ex}
+  \begin{alertblock}{Solu\c{c}\~oes Comparadas e Quest\~ao Central}
+    \small Confronta-se a linha de base pura em PS contra a plataforma multi-cen\'ario PS/PL/H\'ibrida: para blocos de 1024 B, quais etapas compensam a transfer\^encia via BRAM?
+  \end{alertblock}
+  \fonte{README.md, TEMA.md, Matriz\_de\_Testes\_e\_M\'etricas.csv}
+\end{frame}

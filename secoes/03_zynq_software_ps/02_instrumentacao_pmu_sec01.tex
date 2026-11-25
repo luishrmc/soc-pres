@@ -1,0 +1,29 @@
+% Slide S09: Instrumentacao ARM PMU e geracao dinamica de IV (SEC-01)
+\begin{frame}[fragile]
+  \frametitle{Instrumenta\c{c}\~ao ARM PMU (\texttt{PMCCNTR}) e Nonce Din\^amico (SEC-01)}
+  \begin{columns}[T]
+    \begin{column}{.50\textwidth}
+      \begin{pontoschave}[Medi\c{c}\~ao em Sil\'icio]
+        \begin{itemize}
+          \item Leitura inline CP15 de \texttt{PMCCNTR} a 650 MHz.
+          \item Overhead calibrado de \textbf{28 ciclos} subtra\'ido por est\'agio em \texttt{calc\_calibrated\_cycles()}.
+          \item Garantia SEC-01: vincula \texttt{seq\_id} aos 64 bits superiores do IV no AES-CTR.
+        \end{itemize}
+      \end{pontoschave}
+    \end{column}
+    \begin{column}{.46\textwidth}
+      \begin{ccode}
+void pipeline_generate_frame_iv(
+    uint32_t seq_id, uint8_t *iv_out) {
+  iv_out[0] = (uint8_t)(seq_id >> 24);
+  iv_out[1] = (uint8_t)(seq_id >> 16);
+  iv_out[2] = (uint8_t)(seq_id >> 8);
+  iv_out[3] = (uint8_t)(seq_id);
+  memset(&iv_out[4], 0xAA, 4);
+  memset(&iv_out[8], 0x00, 8);
+}
+      \end{ccode}
+    \end{column}
+  \end{columns}
+  \fonte{docs/sw/README.md, docs/sw/PIPELINE\_MGR.md, BENCHMARK\_RESULTS.md}
+\end{frame}

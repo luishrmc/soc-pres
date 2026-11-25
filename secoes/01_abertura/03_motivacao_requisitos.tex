@@ -1,0 +1,25 @@
+% Slide S03: Motivacao, requisitos e plataforma alvo
+\begin{frame}
+  \frametitle{Motiva\c{c}\~ao, Requisitos e Plataforma Alvo}
+  \begin{columns}[T]
+    \begin{column}{.52\textwidth}
+      \begin{itemize}
+        \item \textbf{Contexto de borda:} enlaces restritos exigem compress\~ao e cifragem antes da transmiss\~ao \autocite{NISTSP80038A}.
+        \item \textbf{Gargalo em CPU:} executar as duas rotinas apenas em software consome ciclos do ARM Cortex-A9.
+        \item \textbf{Plataforma alvo:} SoC Zynq-7010 (\texttt{XC7Z010}) na Digilent Cora Z7-10 (PS a 650 MHz e PL a 100 MHz) \autocite{DigilentCoraZ7,XilinxUG585}.
+        \item \textbf{Est\'imulo externo:} injetor SPI gera quadros de 1035 B para valida\c{c}\~ao HIL determin\'istica.
+      \end{itemize}
+    \end{column}
+    \begin{column}{.44\textwidth}
+      \begin{pontoschave}[Objetivos e Requisitos]
+        \begin{itemize}
+          \item Avaliar o pipeline \textit{Compress-then-Encrypt} (\textbf{LZSS + AES-128-CTR}).
+          \item Comparar 4 cen\'arios de particionamento PS/PL com carga fixa de \textbf{1024 B} (ADR-020).
+          \item Medir lat\^encia real via ARM PMU (\texttt{PMCCNTR}, 28 ciclos de overhead) e contadores PL.
+          \item Caracterizar ocupa\c{c}\~ao de sil\'icio (LUTs, FFs, BRAMs) e fechamento temporal.
+        \end{itemize}
+      \end{pontoschave}
+    \end{column}
+  \end{columns}
+  \fonte{README.md, STATUS.md, Projeto Final.pdf, ADR-020}
+\end{frame}

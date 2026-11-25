@@ -1,0 +1,23 @@
+% Slide S20: Sintese comparativa, licoes aprendidas e trabalhos futuros
+\begin{frame}
+  \frametitle{S\'intese Comparativa, Li\c{c}\~oes e Trabalhos Futuros}
+  \begin{columns}[T]
+    \begin{column}{.48\textwidth}
+      \begin{block}{S\'intese PS vs. PL vs. H\'ibrido}
+        \begin{itemize}
+          \item \textbf{Particionamento \'otimo (Cen\'ario 3):} compress\~ao em PS (650 MHz + L1) com cifragem AES-128-CTR em PL (100 MHz), gerando 1,17x a 1,24x de speedup.
+          \item \textbf{Arquitetura robusta:} BRAM Dual-Port e handshake CSR entregaram 60/60 quadros HIL e \texttt{WNS = +0,551 ns}.
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{.48\textwidth}
+      \begin{pontoschave}[Li\c{c}\~oes e Trabalhos Futuros]
+        \begin{itemize}
+          \item \textbf{Li\c{c}\~oes:} \texttt{spisel} discreto, estado \texttt{bram\_wait\_r} (ADR-019) e buffer \textit{zero-drop} s\~ao decisivos na integra\c{c}\~ao.
+          \item \textbf{Trabalhos futuros:} comparadores paralelos/CAM em \texttt{lzss\_accel}, bypass adaptativo para perfil \textit{Chaotic} e s\'intese isolada de C2/C3.
+        \end{itemize}
+      \end{pontoschave}
+    \end{column}
+  \end{columns}
+  \fonte{STATUS.md, BENCHMARK\_RESULTS.md (\S 4), lessons.md, SocProjRepo}
+\end{frame}

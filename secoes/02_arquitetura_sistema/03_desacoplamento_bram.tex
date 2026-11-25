@@ -1,0 +1,24 @@
+% Slide S07: Desacoplamento por BRAM Dual-Port e Store-and-Forward
+\begin{frame}
+  \frametitle{Desacoplamento por BRAM Dual-Port e \textit{Store-and-Forward}}
+  \begin{columns}[T]
+    \begin{column}{.50\textwidth}
+      \begin{itemize}
+        \item \textbf{4 BRAMs True Dual-Port (8 KB cada):} capacidade ativa de 2048 B por janela (\texttt{0x40000000/2000} e \texttt{0x40010000/2000}).
+        \item \textbf{Isolamento de portas:} Porta A atende o PS a 50 MHz; Porta B atende a PL a 100 MHz sem conten\c{c}\~ao.
+        \item \textbf{Contrato em 5 etapas:} escrita MMIO $\rightarrow$ \texttt{START} $\rightarrow$ c\'omputo aut\^onomo $\rightarrow$ trava \texttt{DST\_LEN}/\texttt{DONE} $\rightarrow$ leitura exata.
+      \end{itemize}
+    \end{column}
+    \begin{column}{.46\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.82, transform shape]
+        \node[soc ps] (ps) at (0,1.4) {ARM Cortex-A9\\(50 MHz AXI)};
+        \pic (bin) at (0,0) {bramdp};
+        \node[soc pl] (pl) at (0,-1.4) {Acelerador PL\\(100 MHz)};
+        \draw[soc seta] (ps.south) -- (bin-porta) node[midway,left,soc sinal] {Porta A};
+        \draw[soc seta] (bin-portb) -- (pl.north) node[midway,right,soc sinal] {Porta B};
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+  \fonte{README.md, pipeline\_mgr.h, ADR-012, ADR-017}
+\end{frame}

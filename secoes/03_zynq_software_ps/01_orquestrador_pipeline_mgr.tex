@@ -1,0 +1,23 @@
+% Slide S08: Orquestrador C11 e seguranca de barramento
+\begin{frame}[fragile]
+  \frametitle{Orquestrador \texttt{pipeline\_mgr} e Seguran\c{c}a de Barramento}
+  \begin{columns}[T]
+    \begin{column}{.50\textwidth}
+      \begin{itemize}
+        \item \textbf{Firmware C11 est\'atico:} compilado com \texttt{-Wall -Wextra -Werror} sem aloca\c{c}\~ao din\^amica.
+        \item \textbf{Interlock \texttt{DEVCFG}:} verifica bit 2 (\texttt{PCFG\_DONE}) em \texttt{0xF800700C} antes de acessar \texttt{M\_AXI\_GP0}.
+        \item \textbf{Driver SPI:} \texttt{axi\_spi\_receiver.c} drena a FIFO de 256 B em \texttt{0x41E00000} e valida CRC-16.
+        \item \textbf{Despacho:} coordena os cen\'arios C1 a C4 com temporizador de guarda (100.000 ciclos).
+      \end{itemize}
+    \end{column}
+    \begin{column}{.46\textwidth}
+      \begin{ccode}
+static inline bool is_pl_programmed(void) {
+  /* DEVCFG 0xF800700C, bit 2 = PCFG_DONE */
+  return (Xil_In32(0xF800700CU) & (1U << 2)) != 0U;
+}
+      \end{ccode}
+    \end{column}
+  \end{columns}
+  \fonte{docs/sw/PIPELINE\_MGR.md, docs/sw/AXI\_SPI\_RECEIVER.md, docs/sw/README.md}
+\end{frame}

@@ -1,0 +1,20 @@
+% Slide S17: Fidelidade de compressao por perfil de entropia (1024 B)
+\begin{frame}
+  \frametitle{Fidelidade de Compress\~ao por Perfil de Entropia (1024 B)}
+  \scriptsize
+  \renewcommand{\arraystretch}{1.2}
+  \begin{tabular}{@{}lcccc@{}}
+    \toprule
+    \textbf{Perfil (ADR-020)} & \textbf{M\'in--M\'ax (B)} & \textbf{M\'edia $\pm$ DP (B)} & \textbf{Raz\~ao CR (\%)} & \textbf{Folga BRAM (2048 B)}\\
+    \midrule
+    Quiescent & 440--469 & 453,20 $\pm$ 8,58 & +55,74\% & 1.579 B\\
+    Dynamic & 994--1005 & 998,00 $\pm$ 3,24 & +2,54\% & 1.043 B\\
+    Chaotic & 1152--1154 & 1153,40 $\pm$ 0,68 & -12,64\% & 894 B\\
+    \bottomrule
+  \end{tabular}
+  \par\vspace{1.2ex}
+  \begin{pontoschave}[Paridade Bit-a-Bit SW vs. PL]
+    \small Em todos os 30 quadros do conjunto, o maior casamento foi $\le 15\text{ B} \le 16\text{ B}$ (\textit{lookahead} PL), assegurando sa\'ida id\^entica nos 60/60 ensaios HIL (C1 == C3 e C2 == C4).
+  \end{pontoschave}
+  \fonte{BENCHMARK\_RESULTS.md (\S 3.1), TEST\_PLAN.md}
+\end{frame}

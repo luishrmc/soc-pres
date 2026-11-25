@@ -1,0 +1,24 @@
+% Slide S16: Sincronismo fisico e captura HIL zero-drop
+\begin{frame}
+  \frametitle{Sincronismo F\'isico e Captura HIL \textit{Zero-Drop} (60/60)}
+  \begin{columns}[T]
+    \begin{column}{.48\textwidth}
+      \begin{block}{Gargalo Inicial de Captura}
+        \begin{itemize}
+          \item Perfilamento s\'incrono por quadro (23 a 73 ms) + espera de 30 ms no trigger excedia o per\'iodo de 35,2 ms do ESP32.
+          \item Causava perda de 40\% das rajadas e amostragem enviesada (\textit{stride} 2/3).
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{.48\textwidth}
+      \begin{pontoschave}[Protocolo \textit{Zero-Drop} Implementado]
+        \begin{itemize}
+          \item Pulso ativo-baixo de \textbf{250 us} em \texttt{PMOD JA1} (\texttt{Y18}) para \texttt{GPIO 32} (\textit{lockout} 50 ms, \textit{gap} 30 ms).
+          \item ACK \texttt{0x81} em $< 50$ us + buffer est\'atico \texttt{s\_burst\_buf[30]}.
+          \item Resultado: \textbf{60/60 quadros} com 0 erros de CRC ou enquadramento.
+        \end{itemize}
+      \end{pontoschave}
+    \end{column}
+  \end{columns}
+  \fonte{BENCHMARK\_RESULTS.md (\S 2.4), TEST\_PLAN.md, main.c}
+\end{frame}

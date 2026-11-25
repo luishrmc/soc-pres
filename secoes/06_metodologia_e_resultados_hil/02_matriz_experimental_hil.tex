@@ -1,0 +1,28 @@
+% Slide S18: Matriz experimental completa HIL (1024 B, N=20)
+\begin{frame}
+  \frametitle{Matriz Experimental HIL: Lat\^encia, PMU e Speedup ($N=20$)}
+  \scriptsize
+  \renewcommand{\arraystretch}{1.12}
+  \begin{tabular}{@{}llccccc@{}}
+    \toprule
+    \textbf{Cen\'ario} & \textbf{Perfil} & \textbf{Lat\^encia (ms)} & \textbf{Ciclos PMU} & \textbf{Ciclos PL} & \textbf{CR (\%)} & \textbf{Speedup}\\
+    \midrule
+    1: SW Puro & Quiescent & 3,796 & 2.467.688 & 0 & +55,7\% & 1,00x\\
+    1: SW Puro & Dynamic & 10,188 & 6.621.969 & 0 & +2,5\% & 1,00x\\
+    1: SW Puro & Chaotic & 12,907 & 8.389.708 & 0 & -12,6\% & 1,00x\\
+    \midrule
+    2: PL LZSS + SW AES & Quiescent & 5,990 & 3.893.369 & 200.972 & +55,7\% & 0,63x\\
+    2: PL LZSS + SW AES & Dynamic & 16,112 & 10.473.009 & 573.622 & +2,5\% & 0,63x\\
+    2: PL LZSS + SW AES & Chaotic & 20,563 & 13.366.113 & 744.661 & -12,6\% & 0,63x\\
+    \midrule
+    \textbf{3: SW LZSS + PL AES} & \textbf{Quiescent} & \textbf{3,068} & \textbf{1.994.017} & \textbf{668} & +55,7\% & \textbf{1,24x}\\
+    \textbf{3: SW LZSS + PL AES} & \textbf{Dynamic} & \textbf{8,579} & \textbf{5.576.620} & \textbf{1.452} & +2,5\% & \textbf{1,19x}\\
+    \textbf{3: SW LZSS + PL AES} & \textbf{Chaotic} & \textbf{11,039} & \textbf{7.175.201} & \textbf{1.679} & -12,6\% & \textbf{1,17x}\\
+    \midrule
+    4: HW Total & Quiescent & 5,260 & 3.419.303 & 201.639 & +55,7\% & 0,72x\\
+    4: HW Total & Dynamic & 14,503 & 9.427.015 & 575.075 & +2,5\% & 0,70x\\
+    4: HW Total & Chaotic & 18,694 & 12.150.877 & 746.340 & -12,6\% & 0,69x\\
+    \bottomrule
+  \end{tabular}
+  \fonte{Matriz\_de\_Testes\_e\_M\'etricas.csv, BENCHMARK\_RESULTS.md (\S 3.2), ADR-020}
+\end{frame}

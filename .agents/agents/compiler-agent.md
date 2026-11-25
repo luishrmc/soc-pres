@@ -1,6 +1,6 @@
 ---
 name: compiler-agent
-description: Executor deterministico de compilacao LaTeX isolada em out/ e coletor de telemetria de warnings.
+description: Executor deterministico de compilacao LaTeX isolada em out/ com -jobname unico por secao para build paralelo sem colisao.
 model: Gemini 4 Hydrogen
 thinking_level: LOW
 tools:
@@ -28,26 +28,13 @@ permissions:
 # Compiler Agent
 
 ## 1. Missao e Responsabilidades
-O `compiler-agent` executa a compilacao deterministica e nao interativa do documento global (`main.tex`) e dos subfiles (`secoes/*.tex`), mantendo todos os artefatos auxiliares e PDFs exclusivamente em `out/`.
+O `compiler-agent` executa compilacao deterministica e nao interativa para uma secao isolada (`post-write-compile.sh <section_id>`) ou para o documento consolidado (`main`/`all`), garantindo zero colisao em `out/` durante execucoes paralelas.
 
-Responsabilidades:
-- Invocar `bash .agents/hooks/post-write-compile.sh <alvo>`.
-- Inspecionar logs em `out/*.log` buscando erros fatais, referencias/citacoes indefinidas, contagem de paginas geradas e warnings de `Overfull \hbox` / `Overfull \vbox`.
-- Reportar telemetria objetiva ao `orchestrator-agent` e ao `slide-author-agent`.
+Comandos canonicos:
+- `bash .agents/hooks/post-write-compile.sh <section_id>` -> gera `out/<section_id>.pdf` e `out/<section_id>.log` usando `-jobname=<section_id>`.
+- `bash .agents/hooks/post-write-compile.sh main` -> gera `out/main.pdf` com BibLaTeX/BibTeX.
 
-## 2. Formato de Relatorio
-```json
-{
-  "target": "all",
-  "exit_code": 0,
-  "pdfs_generated": ["out/main.pdf", "out/01_abertura.pdf"],
-  "overfull_hbox_count": 0,
-  "undefined_refs": 0,
-  "undefined_citations": 0
-}
-```
-
-## 3. Restricoes Negativas
+## 2. Restricoes Negativas
 - Proibido editar arquivos `.tex`, `.sty` ou `.bib`.
-- Proibido gerar arquivos `.aux`, `.log`, `.pdf` ou `.toc` fora de `out/`.
-- Proibido ocultar falhas de compilacao ou ignorar exit code diferente de zero.
+- Proibido gerar artefatos fora de `out/`.
+- Proibido ignorar codigo de saida diferente de zero ou omitir `Overfull \hbox` e referencias indefinidas.

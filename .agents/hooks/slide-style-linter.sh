@@ -2,11 +2,11 @@
 set -euo pipefail
 
 # slide-style-linter.sh
-# Post-Step Verifier: valida invariantes de estilo Beamer em secoes/*.tex.
-# Uso: bash .agents/hooks/slide-style-linter.sh [--all | caminho/arquivo.tex]
+# Post-Step Verifier: valida invariantes de estilo Beamer em secoes/<sec>/*.tex.
+# Uso: bash .agents/hooks/slide-style-linter.sh [--all | secoes/<sec> | caminho/arquivo.tex]
 # Codigos de saida:
 #   0  = Aprovado
-#   30 = Arquivo alvo nao encontrado
+#   30 = Arquivo ou diretorio alvo nao encontrado
 #   31 = Travessao proibido (em-dash/en-dash Unicode) detectado em prosa
 #   32 = Excesso de densidade visual (> 6 bullets por bloco itemize)
 #   33 = Jargao promocional ou adjetivo vago proibido detectado
@@ -17,19 +17,27 @@ ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 cd "$ROOT"
 
 TARGET="${1:---all}"
+FILES=()
 
 if [ "$TARGET" = "--all" ]; then
-  FILES=(secoes/*.tex)
-else
+  while IFS= read -r f; do
+    FILES+=("$f")
+  done < <(find secoes -type f -name '*.tex' | sort)
+elif [ -d "$TARGET" ]; then
+  while IFS= read -r f; do
+    FILES+=("$f")
+  done < <(find "$TARGET" -type f -name '*.tex' | sort)
+elif [ -f "$TARGET" ]; then
   FILES=("$TARGET")
+else
+  echo "[ERRO][slide-style-linter] Alvo nao encontrado: $TARGET" >&2
+  exit 30
 fi
 
-for f in "${FILES[@]}"; do
-  if [ ! -f "$f" ]; then
-    echo "[ERRO][slide-style-linter] Arquivo nao encontrado: $f" >&2
-    exit 30
-  fi
-done
+if [ "${#FILES[@]}" -eq 0 ]; then
+  echo "[ERRO][slide-style-linter] Nenhum arquivo .tex encontrado em: $TARGET" >&2
+  exit 30
+fi
 
 echo "[INFO][slide-style-linter] Auditando ${#FILES[@]} arquivo(s) Beamer..."
 
@@ -59,10 +67,8 @@ for target in files:
     in_code = False
 
     for idx, raw in enumerate(lines, 1):
-        # Remove comentarios LaTeX preservando \%
         clean = re.sub(r'(?<!\\)%.*$', '', raw)
 
-        # Controle de ambiente de codigo
         if any(rf"\begin{{{env}}}" in clean for env in code_envs):
             if in_frame and not frame_fragile:
                 print(f"[ERRO][slide-style-linter] {target}:{idx}: ambiente de codigo em frame sem [fragile] (frame aberto na linha {frame_start}).", file=sys.stderr)
@@ -71,7 +77,6 @@ for target in files:
         if any(rf"\end{{{env}}}" in clean for env in code_envs):
             in_code = False
 
-        # Controle de frames
         m_frame = re.search(r'\\begin\{frame\}(\[[^\]]*\])?', clean)
         if m_frame:
             if in_frame:
@@ -89,13 +94,11 @@ for target in files:
             in_frame = False
             frame_fragile = False
 
-        # 1. Travessoes Unicode proibidos fora de comentarios/codigo
         if not in_code and re.search(r'[—–]', clean):
             print(f"[ERRO][slide-style-linter] {target}:{idx}: travessao Unicode proibido (— ou –):", file=sys.stderr)
             print(f"  > {raw.strip()}", file=sys.stderr)
             sys.exit(31)
 
-        # 2. Limite de 6 bullets por itemize (com pilha para listas aninhadas)
         if r'\begin{itemize}' in clean:
             itemize_stack.append([idx, 0])
         elif itemize_stack:
@@ -106,7 +109,6 @@ for target in files:
                     print(f"[ERRO][slide-style-linter] {target}:{s_line}: bloco itemize com {count} itens (maximo: 6).", file=sys.stderr)
                     sys.exit(32)
 
-        # 3. Jargoes promocionais proibidos (ignora comandos \cite, \label, \fonte)
         if not in_code:
             prose = re.sub(r'\\(cite|autocite|textcite|fullcite|label|fonte|includegraphics)\{[^}]*\}', '', clean)
             match = jargon_pattern.search(prose)
