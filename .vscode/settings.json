@@ -1,6 +1,9 @@
 {
-    "latex-workshop.latex.outDir": "out",
+    "latex-workshop.latex.outDir": "%WORKSPACE_FOLDER%/out",
     "latex-workshop.latex.autoBuild.run": "onSave",
+    "latex-workshop.latex.autoClean.run": "onFailed",
+    "latex-workshop.latex.clean.subfolder.enabled": true,
+    "latex-workshop.view.pdf.viewer": "tab",
     "latex-workshop.latex.recipe.default": "Latexmk (pdf)",
     "latex-workshop.latex.tools": [
         {
@@ -12,9 +15,10 @@
                 "-interaction=nonstopmode",
                 "-file-line-error",
                 "-pdf",
+                "-emulate-aux-dir",
                 "-pdflatex=pdflatex %O %S",
                 "-outdir=%WORKSPACE_FOLDER%/out",
-                "-auxdir=%WORKSPACE_FOLDER%/out",
+                "-auxdir=%WORKSPACE_FOLDER%/out/aux",
                 "%DOC%"
             ]
         },
@@ -25,7 +29,7 @@
                 "-synctex=1",
                 "-interaction=nonstopmode",
                 "-file-line-error",
-                "-output-directory=out",
+                "-output-directory=%WORKSPACE_FOLDER%/out",
                 "%DOC%"
             ]
         },
@@ -33,16 +37,18 @@
             "name": "bibtex",
             "command": "bibtex",
             "args": [
-                "out/%DOCFILE%"
+                "%WORKSPACE_FOLDER%/out/aux/%DOCFILE%"
             ]
         },
         {
             "name": "latexmk clean",
             "command": "latexmk",
             "args": [
+                "-cd",
                 "-C",
-                "-outdir=out",
-                "-auxdir=out",
+                "-emulate-aux-dir",
+                "-outdir=%WORKSPACE_FOLDER%/out",
+                "-auxdir=%WORKSPACE_FOLDER%/out/aux",
                 "%DOC%"
             ]
         }

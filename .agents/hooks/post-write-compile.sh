@@ -2,7 +2,8 @@
 set -euo pipefail
 
 # post-write-compile.sh
-# Compilador deterministico com isolamento de artefatos em out/ e -jobname unico por secao.
+# Compilador deterministico com PDFs finais na raiz de out/, auxiliares em out/aux/
+# e logs de execucao em out/logs/ (-jobname unico por secao para build paralelo).
 # Uso: bash .agents/hooks/post-write-compile.sh [main|sections|all|<section_id>|secoes/<sec>/secao.tex]
 # Codigos de saida:
 #   0  = Compilacao concluida sem erros
@@ -13,14 +14,16 @@ TARGET="${1:-all}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 OUT_DIR="$ROOT/out"
+AUX_DIR="$OUT_DIR/aux"
+LOG_DIR="$OUT_DIR/logs"
 
-mkdir -p "$OUT_DIR"
+mkdir -p "$OUT_DIR" "$AUX_DIR" "$LOG_DIR"
 
 compile_one() {
   local tex_rel="$1"
   local job_name="$2"
   local tex_abs="$ROOT/$tex_rel"
-  local log_file="$OUT_DIR/compile_${job_name}.log"
+  local log_file="$LOG_DIR/compile_${job_name}.log"
 
   if [ ! -f "$tex_abs" ]; then
     echo "[ERRO][post-write-compile] Arquivo nao encontrado: $tex_rel" >&2
@@ -29,10 +32,11 @@ compile_one() {
 
   echo "[INFO][post-write-compile] Compilando $tex_rel -> out/${job_name}.pdf..."
   if latexmk -cd -pdf -file-line-error -interaction=nonstopmode -halt-on-error \
-      -jobname="$job_name" -outdir="$OUT_DIR" -auxdir="$OUT_DIR" "$tex_abs" > "$log_file" 2>&1; then
+      -emulate-aux-dir -jobname="$job_name" -outdir="$OUT_DIR" -auxdir="$AUX_DIR" \
+      "$tex_abs" > "$log_file" 2>&1; then
     local overfull_count=0
     local undef_refs=0
-    local latex_log="$OUT_DIR/${job_name}.log"
+    local latex_log="$AUX_DIR/${job_name}.log"
     if [ -f "$latex_log" ]; then
       overfull_count="$(grep -c 'Overfull \\hbox' "$latex_log" || true)"
       undef_refs="$(grep -Ec 'LaTeX Warning: (Reference|Citation).*undefined' "$latex_log" || true)"
@@ -78,5 +82,5 @@ case "$TARGET" in
     ;;
 esac
 
-echo "[OK][post-write-compile] Compilacao finalizada com exito (artefatos isolados em out/)."
+echo "[OK][post-write-compile] PDFs disponiveis em out/ (auxiliares em out/aux/, logs em out/logs/)."
 exit 0

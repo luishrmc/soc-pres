@@ -2,8 +2,8 @@
 % main.tex -- documento raiz da apresentacao do projeto final de SoC
 %
 % Compilacao global : compile ESTE arquivo (gera out/main.pdf com BibLaTeX).
-% Compilacao modular: compile secoes/<secao>.tex (subfiles).
-% Saida isolada em  : out/ (latexmk -cd -outdir=out -auxdir=out).
+% Compilacao modular: compile secoes/<secao>/secao.tex (subfiles).
+% Saida isolada em  : out/ (PDFs finais em out/, auxiliares em out/aux/).
 % ============================================================================
 \documentclass[aspectratio=169,10pt]{beamer}
 
@@ -12,10 +12,12 @@
 
 \begin{document}
 
-\subfile{secoes/01_abertura}
-\subfile{secoes/02_arquitetura_e_evolucao}
-\subfile{secoes/03_subssistemas_hw_sw}
-\subfile{secoes/04_metodologia_e_resultados_hil}
-\subfile{secoes/99_conclusao}
+\subfile{secoes/01_abertura/secao}
+\subfile{secoes/02_arquitetura_sistema/secao}
+\subfile{secoes/03_zynq_software_ps/secao}
+\subfile{secoes/04_zynq_hardware_pl/secao}
+\subfile{secoes/05_ferramenta_auxiliar_esp32/secao}
+\subfile{secoes/06_metodologia_e_resultados_hil/secao}
+\subfile{secoes/99_conclusao/secao}
 
 \end{document}

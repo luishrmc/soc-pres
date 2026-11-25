@@ -28,7 +28,7 @@ MANIFEST = ROOT / ".agents" / "manifest.json"
 
 def snap_path(section_id: str | None) -> Path:
     name = f"boundary_snapshot_{section_id}.json" if section_id else "boundary_snapshot.json"
-    return ROOT / "out" / name
+    return ROOT / "out" / "state" / name
 
 
 def glob_to_regex(pat: str) -> re.Pattern[str]:

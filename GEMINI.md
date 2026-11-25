@@ -17,7 +17,7 @@ Este repositório hospeda a apresentação técnica em LaTeX Beamer (16:9) do pr
 | `bib/referencias.bib` | Base bibliográfica BibLaTeX/BibTeX (edição serializada) | Serializado na consolidação |
 | `utils/memory/` | Memória persistente: `INDEX.md`, `decisions.md`, `lessons.md`, `modules/`, `handoff/`, `episodes/` | `orchestrator-agent` / hooks |
 | `.agents/` | Manifesto, definições de agentes, skills e hooks determinísticos | Protegido (`manifest.json`) |
-| `out/` | Diretório isolado para PDFs e artefatos auxiliares (`-jobname=<sec>`) | `compiler-agent` |
+| `out/` | PDFs finais na raiz (`main.pdf`, `<sec>.pdf`), auxiliares em `out/aux/`, logs em `out/logs/` e estados em `out/state/` | `compiler-agent` |
 
 ---
 
@@ -41,8 +41,8 @@ Este repositório hospeda a apresentação técnica em LaTeX Beamer (16:9) do pr
 ## 3. Orquestração Paralela Livre de Conflitos
 
 Cada seção pode ser conduzida por um `orchestrator-agent` dedicado em paralelo:
-- **Snapshot e fronteira isolados:** `--section <sec>` grava `out/boundary_snapshot_<sec>.json` e restringe escritas a `secoes/<sec>/**`, `figuras/<sec>/**`, `utils/memory/modules/<sec>.md` e `utils/memory/handoff/<sec>.md`.
-- **Compilação isolada:** `post-write-compile.sh <sec>` usa `-jobname=<sec>` em `out/`, gerando `out/<sec>.pdf` e `out/<sec>.log` sem colisão de `secao.pdf`/`secao.aux`.
+- **Snapshot e fronteira isolados:** `--section <sec>` grava `out/state/boundary_snapshot_<sec>.json` e restringe escritas a `secoes/<sec>/**`, `figuras/<sec>/**`, `utils/memory/modules/<sec>.md` e `utils/memory/handoff/<sec>.md`.
+- **Compilação isolada:** `post-write-compile.sh <sec>` usa `-emulate-aux-dir -jobname=<sec>` em `out/`, gerando apenas `out/<sec>.pdf` na raiz de `out/`, auxiliares em `out/aux/` e logs em `out/logs/`.
 - **Arquivos compartilhados serializados:** `main.tex`, `bib/referencias.bib`, `utils/memory/INDEX.md`, `decisions.md` e `lessons.md` nunca são editados concorrentemente por workers de seção.
 
 ---

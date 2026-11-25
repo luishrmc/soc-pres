@@ -16,3 +16,6 @@ Justificativa: viabiliza orquestracao simultanea por secao (`--section`, `-jobna
 
 ## PRES-ADR-005 | 2026-11-25 | figuras | Organizacao de `figuras/` em 7 subdiretorios por secao + `figuras/comuns/`
 Justificativa: espelha `secoes/<sec>/` permitindo adicao/edicao paralela de figuras sem conflito entre workers via `\graphicspath` isolado em cada `secao.tex` e `write_scope` por secao no `manifest.json`.
+
+## PRES-ADR-006 | 2026-11-25 | build | Segregacao de `out/` em PDFs finais na raiz, `out/aux/`, `out/logs/` e `out/state/`
+Justificativa: utiliza `-emulate-aux-dir` no `latexmk` (tanto em `.vscode/settings.json` quanto em `post-write-compile.sh`) para que apenas os `.pdf` finais fiquem visiveis na raiz de `out/`, mantendo auxiliares, logs e snapshots organizados em subpastas.

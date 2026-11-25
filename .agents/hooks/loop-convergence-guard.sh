@@ -26,7 +26,7 @@ ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 cd "$ROOT"
 
 MAX_ITER=5
-STATE_DIR="$ROOT/out"
+STATE_DIR="$ROOT/out/state"
 EPISODES_DIR="$ROOT/utils/memory/episodes"
 STATE_FILE="$STATE_DIR/convergence_${SECTION_ID}.state"
 EPISODE_FILE="$EPISODES_DIR/${SECTION_ID}.md"
